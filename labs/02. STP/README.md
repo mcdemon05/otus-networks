@@ -1,121 +1,42 @@
 ### Задание:
 
-1. Настройка DTP.
-2. Добавление сетей VLAN и назначение портов.
+Создание сети и настройка основных параметров устройства.
+Выбор корневого моста.
+Наблюдение за процессом выбора протоколом STP порта, исходя из стоимости портов.
+Наблюдение за процессом выбора протоколом STP порта, исходя из приоритета портов.
 
 ###  Решение:
 - [Конфигурационные файлы;](configs/)
-- [Сохраненная топология из EVE-NG;](01.VLAN.unl)
+- [Сохраненная топология из EVE-NG;](eve-ng_lab_STP.zip)
 
-### Графическая схема
+### Графическая схема:
 
 ![](Topology.PNG)
 
-**R1:**
-```
-interface Ethernet0/2
- no shutdown
- no ip address
-!
-interface Ethernet0/2.3
- no shutdown
- description Management
- encapsulation dot1Q 3
- ip address 192.168.3.1 255.255.255.0
-!
-interface Ethernet0/2.4
- no shutdown
- description Operations
- encapsulation dot1Q 4
- ip address 192.168.4.1 255.255.255.0
-!
-interface Ethernet0/2.8
- no shutdown
- description Native
- encapsulation dot1Q 8 native
-```
+### Вопросы из лабораторной работы:
 
-**S1:**
-```
-interface Ethernet0/0
- no shutdown
- switchport access vlan 3
- switchport mode access
- switchport nonegotiate
-!
-interface Ethernet0/1
- switchport access vlan 7
- switchport mode access
- switchport nonegotiate
- shutdown
-!
-interface Ethernet0/2
- no shutdown
- switchport trunk allowed vlan 3,4,8
- switchport trunk encapsulation dot1q
- switchport trunk native vlan 8
- switchport mode trunk
- switchport nonegotiate
-!
-interface Ethernet0/3
- no shutdown
- switchport trunk allowed vlan 3,4,8
- switchport trunk encapsulation dot1q
- switchport trunk native vlan 8
- switchport mode trunk
- switchport nonegotiate
-!
-interface Vlan3
- no shutdown
- ip address 192.168.3.11 255.255.255.0
-```
+![](Topology2.PNG)
 
-**S2:**
-```
-interface Ethernet0/0
- no shutdown
- switchport access vlan 4
- switchport mode access
- switchport nonegotiate
-!
-interface Ethernet0/1
- switchport access vlan 7
- switchport mode access
- switchport nonegotiate
- shutdown
-!
-interface Ethernet0/2
- switchport access vlan 7
- switchport mode access
- switchport nonegotiate
- shutdown
-!
-interface Ethernet0/3
- no shutdown
- switchport trunk allowed vlan 3,4,8
- switchport trunk encapsulation dot1q
- switchport trunk native vlan 8
- switchport mode trunk
- switchport nonegotiate
-!
-interface Vlan3
- no shutdown
- ip address 192.168.3.12 255.255.255.0
-```
-
-+ По заданию в лабе, было добавление имен для VLAN
-
-S1 и S2:
-```
-vlan 3
- name Management
-!
-vlan 4
- name Operations
-!
-vlan 7
- name ParkingLot
-!
-vlan 8
- name Native
-```
+- С учетом выходных данных, поступающих с коммутаторов, ответьте на следующие вопросы.
+Какой коммутатор является корневым мостом? 
+**S1**
+- Почему этот коммутатор был выбран протоколом spanning-tree в качестве корневого моста?
+**Наименьший BID**
+- Какие порты на коммутаторе являются корневыми портами? 
+**S2: e0/0
+S3: e0/2**
+- Какие порты на коммутаторе являются назначенными портами? 
+**S1: e0/0, e0/1, e0/2, e0/3
+S2: e0/2, e0/3**
+- Какой порт отображается в качестве альтернативного и в настоящее время заблокирован? 
+**S2: e0/1
+S3: e0/0, e0/1, e0/3**
+- Почему протокол spanning-tree выбрал этот порт в качестве невыделенного (заблокированного) порта?
+**STA подсчитал это на основе стоимости, BID, приоритета, или если со стороны корневого моста будет наименьший номер порта при одинаковом значении стоимости, BID и приоритета.**
+------------
+- Какое значение протокол STP использует первым после выбора корневого моста, чтобы определить выбор порта?
+**Стоимость**
+- Если первое значение на двух портах одинаково, какое следующее значение будет использовать протокол STP при выборе порта?
+**BID**
+- Если оба значения на двух портах равны, каким будет следующее значение, которое использует протокол STP при выборе порта?
+**Приоритет (и номер порта, если приоритет одинаковый)**
