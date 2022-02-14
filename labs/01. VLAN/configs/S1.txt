@@ -78,7 +78,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
- switchport trunk allowed vlan 3,4
+ switchport trunk allowed vlan 3,4,8
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 8
  switchport mode trunk
@@ -86,7 +86,7 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no shutdown
- switchport trunk allowed vlan 3,4
+ switchport trunk allowed vlan 3,4,8
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 8
  switchport mode trunk

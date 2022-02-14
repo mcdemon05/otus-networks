@@ -6,7 +6,10 @@
 ###  Решение:
 - [Конфигурационные файлы;](configs/)
 - [Сохраненная топология из EVE-NG;](01.VLAN.unl)
-- [Графическая схема;](README.md#графическая-схема)
+
+### Графическая схема
+
+![](Topology.PNG)
 
 **R1:**
 ```
@@ -48,7 +51,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
- switchport trunk allowed vlan 3,4
+ switchport trunk allowed vlan 3,4,8
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 8
  switchport mode trunk
@@ -56,7 +59,7 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no shutdown
- switchport trunk allowed vlan 3,4
+ switchport trunk allowed vlan 3,4,8
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 8
  switchport mode trunk
@@ -89,7 +92,7 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no shutdown
- switchport trunk allowed vlan 3,4
+ switchport trunk allowed vlan 3,4,8
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 8
  switchport mode trunk
@@ -116,7 +119,3 @@ vlan 7
 vlan 8
  name Native
 ```
-
-### Графическая схема
-
-![](Topology.PNG)
