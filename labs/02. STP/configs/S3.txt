@@ -52,18 +52,30 @@ vlan internal allocation policy ascending
 !
 interface Ethernet0/0
  no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
  spanning-tree link-type point-to-point
 !
 interface Ethernet0/1
  no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
  spanning-tree link-type point-to-point
 !
 interface Ethernet0/2
  no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
  spanning-tree link-type point-to-point
 !
 interface Ethernet0/3
  no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
  spanning-tree link-type point-to-point
 !
 interface Vlan1
