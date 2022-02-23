@@ -1,0 +1,163 @@
+        
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$Zxuj$4acOYqKD3r1ZQGWajDVsQ1
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip dhcp excluded-address 192.168.1.1 192.168.1.5
+ip dhcp excluded-address 192.168.1.97 192.168.1.101
+!
+ip dhcp pool R1-Client_LAN
+ network 192.168.1.0 255.255.255.192
+ default-router 192.168.1.1 
+ domain-name ccna-lab.com
+ lease 2 12 30
+!
+ip dhcp pool R2-Client_LAN
+ network 192.168.1.96 255.255.255.240
+ default-router 192.168.1.97 
+ domain-name ccna-lab.com
+ lease 2 12 30
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+ipv6 dhcp pool R1-STATELESS
+ dns-server 2001:DB8:ACAD::254
+ domain-name STATELESS.com
+!
+ipv6 dhcp pool R2-STATEFUL
+ address prefix 2001:DB8:ACAD:3:AAA::/80
+ dns-server 2001:DB8:ACAD::254
+ domain-name STATEFUL.com
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.0.0.1 255.255.255.252
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:ACAD:2::1/64
+ ipv6 dhcp server R2-STATEFUL
+!
+interface Ethernet0/1
+ no shutdown
+ no ip address
+!
+interface Ethernet0/1.100
+ no shutdown
+ description Clients
+ encapsulation dot1Q 100
+ ip address 192.168.1.1 255.255.255.192
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:ACAD:1::1/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp server R1-STATELESS
+!
+interface Ethernet0/1.200
+ no shutdown
+ description Management
+ encapsulation dot1Q 200
+ ip address 192.168.1.65 255.255.255.224
+!
+interface Ethernet0/1.1000
+ no shutdown
+ description Native
+ encapsulation dot1Q 1000 native
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.0.0.2
+!
+ipv6 route ::/0 2001:DB8:ACAD:2::2
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 05080F1C2243
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 121A0C041104
+ login
+ transport input none
+!
+!
+end

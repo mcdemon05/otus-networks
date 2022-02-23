@@ -1,0 +1,97 @@
+        
+!
+! Last configuration change at 12:07:55 VLAD Wed Feb 23 2022
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname S2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$1ntA$YUF9VuBENmcIMM6J6CPeI1
+!
+no aaa new-model
+clock timezone VLAD 10 0
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport mode access
+ shutdown
+!
+interface Ethernet0/1
+ switchport mode access
+ shutdown
+!
+interface Ethernet0/2
+ no shutdown
+!
+interface Ethernet0/3
+ no shutdown
+!
+interface Vlan1
+ no shutdown
+ ip address 192.168.1.98 255.255.255.240
+!
+ip default-gateway 192.168.1.97
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 104D000A0618
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 1511021F0725
+ login
+!
+!
+end
