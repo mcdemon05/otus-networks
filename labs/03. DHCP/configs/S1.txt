@@ -47,7 +47,17 @@ vlan internal allocation policy ascending
 !
 !
 !
+vlan 100
+ name Clients
 !
+vlan 200
+ name Management
+!
+vlan 999
+ name ParkingLot
+!
+vlan 1000
+ name Native
 !
 !
 interface Ethernet0/0
