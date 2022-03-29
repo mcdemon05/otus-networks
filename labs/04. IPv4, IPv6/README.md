@@ -358,7 +358,7 @@ ipv6 route 2001:DB8:2042::/48 Ethernet0/2 FE80::25 3
 !
 </pre>
 </details>
----
+------------
 
 AS101 (Киторн)
 
@@ -419,7 +419,7 @@ ipv6 route ::/0 Ethernet0/1 FE80::22 2
 !
 </pre>
 </details>
----
+------------
 
 AS301 (Ламас)
 
@@ -480,7 +480,7 @@ ipv6 route ::/0 Ethernet0/1 FE80::21 2
 !
 </pre>
 </details>
----
+------------
 
 AS1001 Москва
 
@@ -1406,7 +1406,7 @@ ipv6 route ::/0 Ethernet0/0 FE80::15
 !
 </pre>
 </details>
----
+------------
 
 AS1001 Чокурдах
 
@@ -1511,7 +1511,7 @@ ipv6 route ::/0 Ethernet0/2 FE80::28
 !
 </pre>
 </details>
----
+------------
 
 AS1001 Лабытнанги
 
@@ -1542,7 +1542,7 @@ ipv6 route ::/0 Ethernet0/0 FE80::25
 !
 </pre>
 </details>
----
+------------
 
 AS2042 С.-Петербург
 
@@ -1988,9 +1988,3 @@ ipv6 route ::/0 Ethernet0/0 FE80::16
 !
 </pre>
 </details>
----
-
-
-
-
-
