@@ -1,0 +1,248 @@
+
+!
+! Last configuration change at 13:09:44 VLAD Mon Mar 28 2022
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname SW4
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$i0I.$UaVBahuU4Qy2eiCBazqus0
+!
+no aaa new-model
+clock timezone VLAD 10 0
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+vlan 201
+ name po1-vlan
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 100.1.0.4 255.255.255.255
+ ipv6 address 2001:DB8:1001::4/128
+!
+interface Port-channel1
+ no shutdown
+ switchport trunk allowed vlan 201,1000
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 1000
+ switchport mode trunk
+!
+interface Ethernet0/0
+ no shutdown
+ no switchport
+ ip address 172.16.1.20 255.255.255.254
+ duplex auto
+ ipv6 address FE80::4 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ no switchport
+ ip address 172.16.1.22 255.255.255.254
+ duplex auto
+ ipv6 address FE80::4 link-local
+!
+interface Ethernet0/2
+ no shutdown
+ switchport trunk allowed vlan 201,1000
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 1000
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/3
+ no shutdown
+ switchport trunk allowed vlan 201,1000
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 1000
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet1/0
+ no shutdown
+ no switchport
+ ip address 172.16.1.13 255.255.255.254
+ duplex auto
+ ipv6 address FE80::4 link-local
+!
+interface Ethernet1/1
+ no shutdown
+ no switchport
+ ip address 172.16.1.19 255.255.255.254
+ duplex auto
+ ipv6 address FE80::4 link-local
+!
+interface Ethernet1/2
+ shutdown
+!
+interface Ethernet1/3
+ shutdown
+!
+interface Vlan201
+ no shutdown
+ ip address 172.16.1.24 255.255.255.254
+ ipv6 address FE80::4 link-local
+ ipv6 nd cache expire 30
+ arp timeout 30
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip route 0.0.0.0 0.0.0.0 172.16.1.12
+ip route 0.0.0.0 0.0.0.0 172.16.1.18 2
+ip route 0.0.0.0 0.0.0.0 172.16.1.25 3
+ip route 0.0.0.0 0.0.0.0 172.16.1.23 4
+ip route 0.0.0.0 0.0.0.0 172.16.1.21 5
+ip route 100.1.0.2 255.255.255.255 172.16.1.23
+ip route 100.1.0.2 255.255.255.255 172.16.1.25 2
+ip route 100.1.0.2 255.255.255.255 172.16.1.18 3
+ip route 100.1.0.2 255.255.255.255 172.16.1.12 4
+ip route 100.1.0.2 255.255.255.255 172.16.1.21 5
+ip route 100.1.0.3 255.255.255.255 172.16.1.21
+ip route 100.1.0.3 255.255.255.255 172.16.1.25 2
+ip route 100.1.0.3 255.255.255.255 172.16.1.18 3
+ip route 100.1.0.3 255.255.255.255 172.16.1.12 4
+ip route 100.1.0.3 255.255.255.255 172.16.1.23 5
+ip route 100.1.0.5 255.255.255.255 172.16.1.25
+ip route 100.1.0.5 255.255.255.255 172.16.1.18 2
+ip route 100.1.0.5 255.255.255.255 172.16.1.23 3
+ip route 100.1.0.5 255.255.255.255 172.16.1.12 4
+ip route 100.1.0.5 255.255.255.255 172.16.1.21 5
+ip route 100.1.0.12 255.255.255.255 172.16.1.12
+ip route 100.1.0.12 255.255.255.255 172.16.1.25 2
+ip route 100.1.0.12 255.255.255.255 172.16.1.18 3
+ip route 100.1.0.12 255.255.255.255 172.16.1.23 4
+ip route 100.1.0.12 255.255.255.255 172.16.1.21 5
+ip route 100.1.0.13 255.255.255.255 172.16.1.18
+ip route 100.1.0.13 255.255.255.255 172.16.1.25 2
+ip route 100.1.0.13 255.255.255.255 172.16.1.23 3
+ip route 100.1.0.13 255.255.255.255 172.16.1.12 4
+ip route 100.1.0.13 255.255.255.255 172.16.1.21 5
+ip route 100.1.0.15 255.255.255.255 172.16.1.18
+ip route 100.1.0.15 255.255.255.255 172.16.1.25 2
+ip route 100.1.0.15 255.255.255.255 172.16.1.12 3
+ip route 100.1.0.15 255.255.255.255 172.16.1.23 4
+ip route 100.1.0.15 255.255.255.255 172.16.1.21 5
+ip route 100.1.0.20 255.255.255.255 172.16.1.18
+ip route 100.1.0.20 255.255.255.255 172.16.1.25 2
+ip route 100.1.0.20 255.255.255.255 172.16.1.12 3
+ip route 100.1.0.20 255.255.255.255 172.16.1.23 4
+ip route 100.1.0.20 255.255.255.255 172.16.1.21 5
+ip route 100.1.10.0 255.255.255.240 172.16.1.21
+ip route 100.1.10.0 255.255.255.240 172.16.1.25 2
+ip route 100.1.10.0 255.255.255.240 172.16.1.18 3
+ip route 100.1.10.0 255.255.255.240 172.16.1.12 4
+ip route 100.1.10.0 255.255.255.240 172.16.1.23 5
+ip route 100.1.20.0 255.255.255.240 172.16.1.23
+ip route 100.1.20.0 255.255.255.240 172.16.1.25 2
+ip route 100.1.20.0 255.255.255.240 172.16.1.18 3
+ip route 100.1.20.0 255.255.255.240 172.16.1.12 4
+ip route 100.1.20.0 255.255.255.240 172.16.1.21 5
+!
+!
+ipv6 route 2001:DB8:1001::2/128 Ethernet0/1 FE80::2
+ipv6 route 2001:DB8:1001::2/128 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001::2/128 Ethernet1/1 FE80::13 3
+ipv6 route 2001:DB8:1001::2/128 Ethernet1/0 FE80::12 4
+ipv6 route 2001:DB8:1001::2/128 Ethernet0/0 FE80::3 5
+ipv6 route 2001:DB8:1001::3/128 Ethernet0/0 FE80::3
+ipv6 route 2001:DB8:1001::3/128 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001::3/128 Ethernet1/1 FE80::13 3
+ipv6 route 2001:DB8:1001::3/128 Ethernet1/0 FE80::12 4
+ipv6 route 2001:DB8:1001::3/128 Ethernet0/1 FE80::2 5
+ipv6 route 2001:DB8:1001::5/128 Vlan201 FE80::5
+ipv6 route 2001:DB8:1001::5/128 Ethernet1/1 FE80::13 2
+ipv6 route 2001:DB8:1001::5/128 Ethernet0/1 FE80::2 3
+ipv6 route 2001:DB8:1001::5/128 Ethernet1/0 FE80::12 4
+ipv6 route 2001:DB8:1001::5/128 Ethernet0/0 FE80::3 5
+ipv6 route 2001:DB8:1001::12/128 Ethernet1/0 FE80::12
+ipv6 route 2001:DB8:1001::12/128 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001::12/128 Ethernet1/1 FE80::13 3
+ipv6 route 2001:DB8:1001::12/128 Ethernet0/1 FE80::2 4
+ipv6 route 2001:DB8:1001::12/128 Ethernet0/0 FE80::3 5
+ipv6 route 2001:DB8:1001::13/128 Ethernet1/1 FE80::13
+ipv6 route 2001:DB8:1001::13/128 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001::13/128 Ethernet0/1 FE80::2 3
+ipv6 route 2001:DB8:1001::13/128 Ethernet1/0 FE80::12 4
+ipv6 route 2001:DB8:1001::13/128 Ethernet0/0 FE80::3 5
+ipv6 route 2001:DB8:1001::15/128 Ethernet1/1 FE80::13
+ipv6 route 2001:DB8:1001::15/128 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001::15/128 Ethernet1/0 FE80::12 3
+ipv6 route 2001:DB8:1001::15/128 Ethernet0/1 FE80::2 4
+ipv6 route 2001:DB8:1001::15/128 Ethernet0/0 FE80::3 5
+ipv6 route 2001:DB8:1001::20/128 Ethernet1/1 FE80::13
+ipv6 route 2001:DB8:1001::20/128 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001::20/128 Ethernet1/0 FE80::12 3
+ipv6 route 2001:DB8:1001::20/128 Ethernet0/1 FE80::2 4
+ipv6 route 2001:DB8:1001::20/128 Ethernet0/0 FE80::3 5
+ipv6 route 2001:DB8:1001:10::/64 Ethernet0/0 FE80::3
+ipv6 route 2001:DB8:1001:10::/64 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001:10::/64 Ethernet1/1 FE80::13 3
+ipv6 route 2001:DB8:1001:10::/64 Ethernet1/0 FE80::12 4
+ipv6 route 2001:DB8:1001:10::/64 Ethernet0/1 FE80::2 5
+ipv6 route 2001:DB8:1001:20::/64 Ethernet0/1 FE80::2
+ipv6 route 2001:DB8:1001:20::/64 Vlan201 FE80::5 2
+ipv6 route 2001:DB8:1001:20::/64 Ethernet1/1 FE80::13 3
+ipv6 route 2001:DB8:1001:20::/64 Ethernet1/0 FE80::12 4
+ipv6 route 2001:DB8:1001:20::/64 Ethernet0/0 FE80::3 5
+ipv6 route ::/0 Ethernet1/0 FE80::12
+ipv6 route ::/0 Ethernet1/1 FE80::13 2
+ipv6 route ::/0 Vlan201 FE80::5 3
+ipv6 route ::/0 Ethernet0/1 FE80::2 4
+ipv6 route ::/0 Ethernet0/0 FE80::3 5
+!
+!
+!
+control-plane
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 045802150C2E
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 05080F1C2243
+ login
+!
+!
+end
