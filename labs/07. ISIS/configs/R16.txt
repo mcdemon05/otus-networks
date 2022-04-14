@@ -1,0 +1,147 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R16
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$ULGl$ItY2LnqrWjkB7ARGqwvb2/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 20.42.0.16 255.255.255.255
+ ipv6 address 2001:DB8:2042::16/128
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 172.16.1.4 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 172.16.1.1 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 172.16.1.6 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 172.16.1.8 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 172.16.1.0
+ip route 0.0.0.0 0.0.0.0 172.16.1.7 2
+ip route 0.0.0.0 0.0.0.0 172.16.1.5 3
+ip route 20.42.0.9 255.255.255.255 172.16.1.7
+ip route 20.42.0.9 255.255.255.255 172.16.1.5 2
+ip route 20.42.0.10 255.255.255.255 172.16.1.5
+ip route 20.42.0.10 255.255.255.255 172.16.1.7 2
+ip route 20.42.0.32 255.255.255.255 172.16.1.9
+ip route 20.42.10.0 255.255.255.240 172.16.1.7
+ip route 20.42.10.0 255.255.255.240 172.16.1.5 2
+ip route 20.42.20.0 255.255.255.240 172.16.1.5
+ip route 20.42.20.0 255.255.255.240 172.16.1.7 2
+!
+ipv6 route 2001:DB8:2042::9/128 Ethernet0/2 FE80::9
+ipv6 route 2001:DB8:2042::9/128 Ethernet0/0 FE80::10 2
+ipv6 route 2001:DB8:2042::10/128 Ethernet0/0 FE80::10
+ipv6 route 2001:DB8:2042::10/128 Ethernet0/2 FE80::9 2
+ipv6 route 2001:DB8:2042::32/128 Ethernet0/3 FE80::32
+ipv6 route 2001:DB8:2042:10::/64 Ethernet0/2 FE80::9
+ipv6 route 2001:DB8:2042:10::/64 Ethernet0/0 FE80::10 2
+ipv6 route 2001:DB8:2042:20::/64 Ethernet0/0 FE80::10
+ipv6 route 2001:DB8:2042:20::/64 Ethernet0/2 FE80::9 2
+ipv6 route ::/0 Ethernet0/1 FE80::18
+ipv6 route ::/0 Ethernet0/2 FE80::9 2
+ipv6 route ::/0 Ethernet0/0 FE80::10 3
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 13061E010803
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 1511021F0725
+ login
+ transport input none
+!
+!
+end
