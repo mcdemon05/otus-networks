@@ -36,8 +36,7 @@ AS520 (Триада)
 
 <hr>
 
-### Внесение изменений в конфигурацию:
-
+### Внесение изменений в конфигурацию и отображение маршрутов:
 <details>
   <summary>R23</summary>
 <pre>
@@ -88,6 +87,43 @@ no ipv6 route 2001:DB8:2042::/48 Ethernet0/2 FE80::24
 no ipv6 route 2001:DB8:2042::/48 Ethernet0/1 FE80::25 2
 ipv6 route 2001:DB8:301::/48 Ethernet0/0 FE80::22
 !
+</pre>
+</details>
+<details>
+  <summary>R23 show ip/ipv6 route</summary>
+<pre>
+R23#sh ip route isis
+...
+      5.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+i L2     5.20.0.24/32 [115/20] via 172.16.1.3, 00:04:50, Ethernet0/2
+i L1     5.20.0.25/32 [115/20] via 172.16.1.1, 00:04:49, Ethernet0/1
+i L2     5.20.0.26/32 [115/30] via 172.16.1.3, 00:04:50, Ethernet0/2
+                      [115/30] via 172.16.1.1, 00:04:50, Ethernet0/1
+      20.0.0.0/16 is subnetted, 1 subnets
+i L2     20.42.0.0 [115/10] via 172.16.1.3, 00:04:50, Ethernet0/2
+      100.0.0.0/8 is variably subnetted, 5 subnets, 3 masks
+i L2     100.1.1.0/24 [115/10] via 172.16.1.1, 00:04:50, Ethernet0/1
+i L2     100.1.2.0/24 [115/10] via 172.16.1.1, 00:04:50, Ethernet0/1
+i L2     100.1.10.16/28 [115/10] via 172.16.1.1, 00:04:50, Ethernet0/1
+i L2     100.1.20.16/28 [115/10] via 172.16.1.1, 00:04:50, Ethernet0/1
+      172.16.0.0/16 is variably subnetted, 6 subnets, 2 masks
+i L2     172.16.1.4/31 [115/20] via 172.16.1.3, 00:04:50, Ethernet0/2
+i L1     172.16.1.6/31 [115/20] via 172.16.1.1, 00:04:49, Ethernet0/1
+R23#sh ipv6 route isis
+...
+I2  2001:DB8:520::24/128 [115/20]
+     via FE80::24, Ethernet0/2
+I1  2001:DB8:520::25/128 [115/20]
+     via FE80::25, Ethernet0/1
+I2  2001:DB8:520::26/128 [115/30]
+     via FE80::24, Ethernet0/2
+     via FE80::25, Ethernet0/1
+I2  2001:DB8:1001:A00::/56 [115/10]
+     via FE80::25, Ethernet0/1
+I2  2001:DB8:1001:B00::/56 [115/10]
+     via FE80::25, Ethernet0/1
+I2  2001:DB8:2042::/48 [115/10]
+     via FE80::24, Ethernet0/2
 </pre>
 </details>
 
@@ -144,6 +180,41 @@ no ipv6 route 2001:DB8:2042::/48 Ethernet0/1 FE80::26 2
 no ipv6 route 2001:DB8:2042::/48 Ethernet0/2 FE80::23 3
 </pre>
 </details>
+<details>
+  <summary>R24 show ip/ipv6 route</summary>
+<pre>
+R24#sh ip route isis
+...
+      5.0.0.0/8 is variably subnetted, 8 subnets, 2 masks
+i L2     5.20.0.23/32 [115/20] via 172.16.1.2, 00:06:33, Ethernet0/2
+i L2     5.20.0.25/32 [115/30] via 172.16.1.5, 00:06:30, Ethernet0/1
+                      [115/30] via 172.16.1.2, 00:06:30, Ethernet0/2
+i L2     5.20.0.26/32 [115/20] via 172.16.1.5, 00:06:33, Ethernet0/1
+      100.0.0.0/8 is variably subnetted, 5 subnets, 3 masks
+i L2     100.1.1.0/24 [115/10] via 172.16.1.5, 00:06:33, Ethernet0/1
+i L2     100.1.2.0/24 [115/20] via 172.16.1.5, 00:06:33, Ethernet0/1
+                      [115/20] via 172.16.1.2, 00:06:33, Ethernet0/2
+i L2     100.1.10.16/28 [115/10] via 172.16.1.5, 00:06:33, Ethernet0/1
+i L2     100.1.20.16/28 [115/10] via 172.16.1.5, 00:06:33, Ethernet0/1
+      172.16.0.0/16 is variably subnetted, 6 subnets, 2 masks
+i L2     172.16.1.0/31 [115/20] via 172.16.1.2, 00:06:33, Ethernet0/2
+i L2     172.16.1.6/31 [115/20] via 172.16.1.5, 00:06:33, Ethernet0/1
+R24#sh ipv6 route isis
+...
+I2  2001:DB8:520::23/128 [115/20]
+     via FE80::23, Ethernet0/2
+I2  2001:DB8:520::25/128 [115/30]
+     via FE80::23, Ethernet0/2
+     via FE80::26, Ethernet0/1
+I2  2001:DB8:520::26/128 [115/20]
+     via FE80::26, Ethernet0/1
+I2  2001:DB8:1001:A00::/56 [115/10]
+     via FE80::26, Ethernet0/1
+I2  2001:DB8:1001:B00::/56 [115/20]
+     via FE80::23, Ethernet0/2
+     via FE80::26, Ethernet0/1
+</pre>
+</details>
 
 <details>
   <summary>R25</summary>
@@ -192,6 +263,46 @@ no ipv6 route 2001:DB8:1001::/48 Ethernet0/2 FE80::26 2
 no ipv6 route 2001:DB8:2042::/48 Ethernet0/2 FE80::26
 no ipv6 route 2001:DB8:2042::/48 Ethernet0/0 FE80::23 2
 !
+</pre>
+</details>
+<details>
+  <summary>R25 show ip/ipv6 route</summary>
+<pre>
+R25#sh ip route isis
+...
+      5.0.0.0/8 is variably subnetted, 8 subnets, 2 masks
+i L1     5.20.0.23/32 [115/20] via 172.16.1.0, 00:07:29, Ethernet0/0
+i L2     5.20.0.24/32 [115/30] via 172.16.1.7, 00:07:30, Ethernet0/2
+                      [115/30] via 172.16.1.0, 00:07:30, Ethernet0/0
+i L2     5.20.0.26/32 [115/20] via 172.16.1.7, 00:07:30, Ethernet0/2
+      20.0.0.0/16 is subnetted, 1 subnets
+i L2     20.42.0.0 [115/10] via 172.16.1.7, 00:07:30, Ethernet0/2
+      30.0.0.0/16 is subnetted, 1 subnets
+i L2     30.1.0.0 [115/10] via 172.16.1.0, 00:07:30, Ethernet0/0
+      100.0.0.0/8 is variably subnetted, 5 subnets, 3 masks
+i L2     100.1.0.0/16 [115/10] via 172.16.1.0, 00:07:30, Ethernet0/0
+      101.0.0.0/16 is subnetted, 1 subnets
+i L2     101.0.0.0 [115/10] via 172.16.1.0, 00:07:30, Ethernet0/0
+      172.16.0.0/16 is variably subnetted, 6 subnets, 2 masks
+i L1     172.16.1.2/31 [115/20] via 172.16.1.0, 00:07:29, Ethernet0/0
+i L2     172.16.1.4/31 [115/20] via 172.16.1.7, 00:07:30, Ethernet0/2
+R25#sh ipv6 route isis
+...
+I2  2001:DB8:101::/48 [115/10]
+     via FE80::23, Ethernet0/0
+I2  2001:DB8:301::/48 [115/10]
+     via FE80::23, Ethernet0/0
+I1  2001:DB8:520::23/128 [115/20]
+     via FE80::23, Ethernet0/0
+I2  2001:DB8:520::24/128 [115/30]
+     via FE80::23, Ethernet0/0
+     via FE80::26, Ethernet0/2
+I2  2001:DB8:520::26/128 [115/20]
+     via FE80::26, Ethernet0/2
+I2  2001:DB8:1001::/48 [115/10]
+     via FE80::23, Ethernet0/0
+I2  2001:DB8:2042::/48 [115/10]
+     via FE80::26, Ethernet0/2
 </pre>
 </details>
 
@@ -244,5 +355,44 @@ no ipv6 route 2001:DB8:1001::/48 Ethernet0/2 FE80::25 2
 no ipv6 route 2001:DB8:2042::/48 Ethernet0/0 FE80::24 2
 no ipv6 route 2001:DB8:2042::/48 Ethernet0/2 FE80::25 3
 !
+</pre>
+</details>
+<details>
+  <summary>R26 show ip/ipv6 route</summary>
+<pre>
+R26#sh ip route isis
+...
+      5.0.0.0/8 is variably subnetted, 8 subnets, 2 masks
+i L2     5.20.0.23/32 [115/30] via 172.16.1.6, 00:08:02, Ethernet0/2
+                      [115/30] via 172.16.1.4, 00:08:02, Ethernet0/0
+i L2     5.20.0.24/32 [115/20] via 172.16.1.4, 00:08:06, Ethernet0/0
+i L2     5.20.0.25/32 [115/20] via 172.16.1.6, 00:08:06, Ethernet0/2
+      30.0.0.0/16 is subnetted, 1 subnets
+i L2     30.1.0.0 [115/10] via 172.16.1.4, 00:08:06, Ethernet0/0
+      100.0.0.0/8 is variably subnetted, 5 subnets, 3 masks
+i L2     100.1.0.0/16 [115/10] via 172.16.1.4, 00:08:06, Ethernet0/0
+i L2     100.1.2.0/24 [115/10] via 172.16.1.6, 00:08:06, Ethernet0/2
+      101.0.0.0/16 is subnetted, 1 subnets
+i L2     101.0.0.0 [115/10] via 172.16.1.4, 00:08:06, Ethernet0/0
+      172.16.0.0/16 is variably subnetted, 6 subnets, 2 masks
+i L2     172.16.1.0/31 [115/20] via 172.16.1.6, 00:08:06, Ethernet0/2
+i L2     172.16.1.2/31 [115/20] via 172.16.1.4, 00:08:06, Ethernet0/0
+R26#sh ipv6 route isis
+...
+I2  2001:DB8:101::/48 [115/10]
+     via FE80::24, Ethernet0/0
+I2  2001:DB8:301::/48 [115/10]
+     via FE80::24, Ethernet0/0
+I2  2001:DB8:520::23/128 [115/30]
+     via FE80::24, Ethernet0/0
+     via FE80::25, Ethernet0/2
+I2  2001:DB8:520::24/128 [115/20]
+     via FE80::24, Ethernet0/0
+I2  2001:DB8:520::25/128 [115/20]
+     via FE80::25, Ethernet0/2
+I2  2001:DB8:1001::/48 [115/10]
+     via FE80::24, Ethernet0/0
+I2  2001:DB8:1001:B00::/56 [115/10]
+     via FE80::25, Ethernet0/2
 </pre>
 </details>
