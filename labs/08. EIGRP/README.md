@@ -466,7 +466,6 @@ no ipv6 route 2001:DB8:2042:20::/64 Ethernet0/1 FE80::17 2
 <details>
   <summary>R18 show ip/ipv6 route</summary>
 <pre>
-
 R18#sh ip route eigrp
 ...
 Gateway of last resort is 5.20.24.2 to network 0.0.0.0
