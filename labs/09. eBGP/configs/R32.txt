@@ -1,0 +1,122 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R32
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$2qLN$4trjV93s93UWIeRLW/7f50
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 20.42.0.32 255.255.255.255
+ ipv6 address 2001:DB8:2042::32/128
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 172.16.1.9 255.255.255.254
+ ipv6 address FE80::32 link-local
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 172.16.1.8
+!
+ipv6 route ::/0 Ethernet0/0 FE80::16
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 1511021F0725
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 13061E010803
+ login
+ transport input none
+!
+!
+end
