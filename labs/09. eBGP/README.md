@@ -141,7 +141,7 @@ ipv6 route 2001:DB8:1001::/48 Null0
 </pre>
 </details>
 <details>
-  <summary>R14 show ip/ipv6 route</summary>
+  <summary>R14 show bgp ipv4/6 unicast</summary>
 <pre>
 R14#sh bgp ipv4 unicast
 BGP table version is 11, local router ID is 100.1.0.14
@@ -183,6 +183,9 @@ BGP table version is 9, local router ID is 100.1.0.14
  *>  2001:DB8:2042::/48
                        2001:DB8:101:22E0::22
                                                               0 101 301 520 2042 i
+</pre>
+</details>
+
 <details>
   <summary>R15</summary>
 <pre>
@@ -213,7 +216,7 @@ ipv6 route 2001:DB8:1001::/48 Null0
 </pre>
 </details>
 <details>
-  <summary>R15 show ip/ipv6 route</summary>
+  <summary>R15 show bgp ipv4/6 unicast</summary>
 <pre>
 R15#sh bgp ipv4 unicast
 BGP table version is 320, local router ID is 100.1.0.15
@@ -320,7 +323,7 @@ no ipv6 route ::/0 Ethernet0/2 FE80::24
 </pre>
 </details>
 <details>
-  <summary>R18 show ip/ipv6 route</summary>
+  <summary>R18 show bgp ipv4/6 unicast</summary>
 <pre>
 R18#sh bgp ipv4 unicast
 BGP table version is 44, local router ID is 20.42.0.18
@@ -434,7 +437,7 @@ ipv6 route 2001:DB8:301::/48 Null0
 </pre>
 </details>
 <details>
-  <summary>R21 show ip/ipv6 route</summary>
+  <summary>R21 show bgp ipv4/6 unicast</summary>
 <pre>
 R21#sh bgp ipv4 unicast
 BGP table version is 349, local router ID is 30.1.0.21
@@ -528,7 +531,7 @@ ipv6 route 2001:DB8:101::/48 Null0
 </pre>
 </details>
 <details>
-  <summary>R22 show ip/ipv6 route</summary>
+  <summary>R22 show bgp ipv4/6 unicast</summary>
 <pre>
 R22#sh bgp ipv4 unicast
 BGP table version is 12, local router ID is 101.0.0.22
@@ -655,7 +658,7 @@ ipv6 prefix-list FILTER_redist_to_bgpv6 seq 30 permit ::/0 le 128
 </pre>
 </details>
 <details>
-  <summary>R24 show ip/ipv6 route</summary>
+  <summary>R24 show bgp ipv4/6 unicast</summary>
 <pre>
 R24#sh bgp ipv4 unicast
 BGP table version is 52, local router ID is 5.20.0.24
@@ -759,7 +762,7 @@ ipv6 prefix-list FILTER_redist_to_bgpv6 seq 30 permit ::/0 le 128
 </pre>
 </details>
 <details>
-  <summary>R26 show ip/ipv6 route</summary>
+  <summary>R26 show bgp ipv4/6 unicast</summary>
 <pre>
 R26#sh bgp ipv4 unicast
 BGP table version is 65, local router ID is 5.20.0.26
