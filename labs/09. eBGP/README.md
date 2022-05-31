@@ -275,26 +275,16 @@ router eigrp SPB
  !
  address-family ipv4 unicast autonomous-system 2042
   !
-  af-interface Ethernet0/1
-   summary-address 0.0.0.0 0.0.0.0
-  exit-af-interface
-  !
-  af-interface Ethernet0/0
-   summary-address 0.0.0.0 0.0.0.0
-  exit-af-interface
-  !
+  topology base
+   redistribute bgp 2042 metric 100 1 255 1 1500 route-map REDIST_def
+  exit-af-topology
  exit-address-family
  !
  address-family ipv6 unicast autonomous-system 2042
   !
-  af-interface Ethernet0/1
-   summary-address ::/0
-  exit-af-interface
-  !
-  af-interface Ethernet0/0
-   summary-address ::/0
-  exit-af-interface
-  !
+  topology base
+   redistribute bgp 2042 metric 100 1 255 1 1500 route-map REDIST_def_v6
+  exit-af-topology
  exit-address-family
 !
 router bgp 2042
@@ -317,35 +307,46 @@ router bgp 2042
 !
 no ip route *
 !
+ip prefix-list default_r seq 10 permit 0.0.0.0/0
+ip prefix-list default_r seq 20 deny 0.0.0.0/0 le 32
+!
 no ipv6 route ::/0 Ethernet0/3 FE80::26 2
 no ipv6 route ::/0 Ethernet0/2 FE80::24
+!
+ipv6 prefix-list default_r_v6 seq 10 permit ::/0
+ipv6 prefix-list default_r_v6 seq 20 deny ::/0 le 128
+!
+route-map REDIST_def permit 10
+ match ip address prefix-list default_r
+route-map REDIST_def deny 20
+!
+route-map REDIST_def_v6 permit 10
+ match ipv6 address prefix-list default_r_v6
+route-map REDIST_def_v6 deny 20
 !
 </pre>
 </details>
 <details>
   <summary>R18 show bgp ipv4/6 unicast</summary>
 <pre>
-R18#sh bgp ipv4 unicast
-BGP table version is 44, local router ID is 20.42.0.18
+sh bgp ipv4 unicast
+BGP table version is 15, local router ID is 20.42.0.18
 ...
      Network          Next Hop            Metric LocPrf Weight Path
- r   0.0.0.0          5.20.24.2                              0 520 i
- r>                   5.20.26.2                              0 520 i
- *   5.20.0.0/16      5.20.24.2                0             0 520 i
- *>                   5.20.26.2                0             0 520 i
+ *   0.0.0.0          5.20.26.2                              0 520 i
+ *>                   5.20.24.2                              0 520 i
+ *   5.20.0.0/16      5.20.26.2                0             0 520 i
+ *>                   5.20.24.2                0             0 520 i
  *>  20.42.0.0/16     172.16.1.1         1024640         32768 i
  *>  30.1.0.0/16      5.20.26.2               10             0 520 ?
  *                    5.20.24.2                              0 520 301 i
  *>  100.1.0.0/16     5.20.26.2               10             0 520 ?
  *                    5.20.24.2                              0 520 301 1001 i
- *>  100.1.1.0/24     5.20.26.2               10             0 520 ?
- *                    5.20.24.2               20             0 520 ?
+ *>  100.1.1.0/24     5.20.24.2               10             0 520 ?
  *>  100.1.2.0/24     5.20.26.2               10             0 520 ?
  *                    5.20.24.2               20             0 520 ?
- *>  100.1.10.16/28   5.20.26.2               10             0 520 ?
- *                    5.20.24.2               20             0 520 ?
- *>  100.1.20.16/28   5.20.26.2               10             0 520 ?
- *                    5.20.24.2               20             0 520 ?
+ *>  100.1.10.16/28   5.20.24.2               10             0 520 ?
+ *>  100.1.20.16/28   5.20.24.2               10             0 520 ?
  *>  101.0.0.0/16     5.20.26.2               10             0 520 ?
  *                    5.20.24.2                              0 520 301 101 i
 R18#sh bgp ipv6 unicast
@@ -661,7 +662,7 @@ ipv6 prefix-list FILTER_redist_to_bgpv6 seq 30 permit ::/0 le 128
   <summary>R24 show bgp ipv4/6 unicast</summary>
 <pre>
 R24#sh bgp ipv4 unicast
-BGP table version is 52, local router ID is 5.20.0.24
+BGP table version is 17, local router ID is 5.20.0.24
 ...
      Network          Next Hop            Metric LocPrf Weight Path
      0.0.0.0          0.0.0.0                                0 i
@@ -672,10 +673,10 @@ BGP table version is 52, local router ID is 5.20.0.24
  *>  20.42.0.0/16     5.20.24.3          1024640             0 2042 i
  *>  30.1.0.0/16      5.20.24.1                0             0 301 i
  *>  100.1.0.0/16     5.20.24.1                              0 301 1001 i
- *>  100.1.1.0/24     172.16.1.2              20         32768 ?
+ *>  100.1.1.0/24     172.16.1.5              10         32768 ?
  *>  100.1.2.0/24     172.16.1.2              20         32768 ?
- *>  100.1.10.16/28   172.16.1.2              20         32768 ?
- *>  100.1.20.16/28   172.16.1.2              20         32768 ?
+ *>  100.1.10.16/28   172.16.1.5              10         32768 ?
+ *>  100.1.20.16/28   172.16.1.5              10         32768 ?
  *>  101.0.0.0/16     5.20.24.1                              0 301 101 i
  *>  172.16.1.0/31    172.16.1.2              20         32768 ?
  *>  172.16.1.6/31    172.16.1.5              20         32768 ?
@@ -745,6 +746,7 @@ router bgp 520
   neighbor 2001:DB8:520:26E3::18 prefix-list FILTER_redist_to_bgpv6 out
  exit-address-family
 !
+no ip route 20.42.0.0 255.255.0.0 5.20.26.3
 ip route 5.20.0.0 255.255.0.0 Null0
 !
 ip prefix-list FILTER_redist_to_bgp seq 10 deny 172.16.0.0/16 le 32
@@ -752,6 +754,7 @@ ip prefix-list FILTER_redist_to_bgp seq 20 permit 5.20.0.0/16
 ip prefix-list FILTER_redist_to_bgp seq 21 deny 5.20.0.0/16 le 32
 ip prefix-list FILTER_redist_to_bgp seq 30 permit 0.0.0.0/0 le 32
 !
+no ipv6 route 2001:DB8:2042::/48 Ethernet0/3 FE80::18
 ipv6 route 2001:DB8:520::/48 Null0
 ipv6 route 2001:DB8:1001:A00::/56 Ethernet0/1 FE80::28
 !
@@ -765,7 +768,7 @@ ipv6 prefix-list FILTER_redist_to_bgpv6 seq 30 permit ::/0 le 128
   <summary>R26 show bgp ipv4/6 unicast</summary>
 <pre>
 R26#sh bgp ipv4 unicast
-BGP table version is 65, local router ID is 5.20.0.26
+BGP table version is 14, local router ID is 5.20.0.26
 ...
      Network          Next Hop            Metric LocPrf Weight Path
      0.0.0.0          0.0.0.0                                0 i
@@ -776,10 +779,7 @@ BGP table version is 65, local router ID is 5.20.0.26
  *>  20.42.0.0/16     5.20.26.3          1024640             0 2042 i
  *>  30.1.0.0/16      172.16.1.4              10         32768 ?
  *>  100.1.0.0/16     172.16.1.4              10         32768 ?
- *>  100.1.1.0/24     172.16.1.6              10         32768 ?
  *>  100.1.2.0/24     172.16.1.6              10         32768 ?
- *>  100.1.10.16/28   172.16.1.6              10         32768 ?
- *>  100.1.20.16/28   172.16.1.6              10         32768 ?
  *>  101.0.0.0/16     172.16.1.4              10         32768 ?
  *>  172.16.1.0/31    172.16.1.6              20         32768 ?
  *>  172.16.1.2/31    172.16.1.4              20         32768 ?

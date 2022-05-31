@@ -152,6 +152,9 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 ip route 5.20.0.0 255.255.0.0 Null0
+ip route 100.1.1.0 255.255.255.0 5.20.26.1
+ip route 100.1.10.16 255.255.255.240 5.20.26.1
+ip route 100.1.20.16 255.255.255.240 5.20.26.1
 !
 !
 ip prefix-list FILTER_redist_to_bgp seq 10 deny 172.16.0.0/16 le 32

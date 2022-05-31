@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 19:18:15 VLAD Tue May 24 2022
+! Last configuration change at 16:04:51 VLAD Tue May 31 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -98,15 +98,8 @@ router eigrp SPB
  !
  address-family ipv4 unicast autonomous-system 2042
   !
-  af-interface Ethernet0/1
-   summary-address 0.0.0.0 0.0.0.0
-  exit-af-interface
-  !
-  af-interface Ethernet0/0
-   summary-address 0.0.0.0 0.0.0.0
-  exit-af-interface
-  !
   topology base
+   redistribute bgp 2042 metric 100 1 255 1 1500 route-map REDIST_def
   exit-af-topology
   network 20.42.0.18 0.0.0.0
   network 172.16.1.0 0.0.0.3
@@ -114,16 +107,8 @@ router eigrp SPB
  !
  address-family ipv6 unicast autonomous-system 2042
   !
-  af-interface Ethernet0/1
-   summary-address ::/0
-  exit-af-interface
-  !
-  af-interface Ethernet0/0
-   summary-address ::/0
-  exit-af-interface
-  !
   topology base
-   redistribute static
+   redistribute bgp 2042 metric 100 1 255 1 1500 route-map REDIST_def_v6
   exit-af-topology
  exit-address-family
 !
@@ -154,6 +139,22 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+!
+ip prefix-list default_r seq 10 permit 0.0.0.0/0
+ip prefix-list default_r seq 20 deny 0.0.0.0/0 le 32
+!
+!
+ipv6 prefix-list default_r_v6 seq 10 permit ::/0
+ipv6 prefix-list default_r_v6 seq 20 deny ::/0 le 128
+route-map REDIST_def permit 10
+ match ip address prefix-list default_r
+!
+route-map REDIST_def deny 20
+!
+route-map REDIST_def_v6 permit 10
+ match ipv6 address prefix-list default_r_v6
+!
+route-map REDIST_def_v6 deny 20
 !
 !
 !
