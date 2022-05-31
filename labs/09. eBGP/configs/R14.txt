@@ -110,18 +110,18 @@ router ospf 1
 !
 router bgp 1001
  bgp log-neighbor-changes
- neighbor 2001:DB8:301:22E0::22 remote-as 101
+ neighbor 2001:DB8:101:22E0::22 remote-as 101
  neighbor 101.0.100.0 remote-as 101
  !
  address-family ipv4
   network 100.1.0.0 mask 255.255.0.0
-  no neighbor 2001:DB8:301:22E0::22 activate
+  no neighbor 2001:DB8:101:22E0::22 activate
   neighbor 101.0.100.0 activate
  exit-address-family
  !
  address-family ipv6
   network 2001:DB8:1001::/48
-  neighbor 2001:DB8:301:22E0::22 activate
+  neighbor 2001:DB8:101:22E0::22 activate
  exit-address-family
 !
 ip forward-protocol nd

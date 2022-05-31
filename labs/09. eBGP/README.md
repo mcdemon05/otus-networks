@@ -67,7 +67,7 @@
 | **SW5**    | Lo1<br>e0/0<br>e0/1<br>e1/0<br>e1/1<br>vlan201 | 100.1.0.5/32<br>172.16.1.26/31<br>172.16.1.28/31<br>172.16.1.17/31<br>172.16.1.15/31<br>172.16.1.25/31 | 2001:DB8:1001::5/128<br>FE80::5 link-local<br>FE80::5 link-local<br>FE80::5 link-local<br>FE80::5 link-local<br>FE80::5 link-local               |
 | **R12**    | Lo1<br>e0/0<br>e0/1<br>e0/2<br>e0/3            | 100.1.0.12/32<br>172.16.1.12/31<br>172.16.1.14/31<br>172.16.1.1/31<br>172.16.1.9/31                    | 2001:DB8:1001::12/128<br>FE80::12 link-local<br>FE80::12 link-local<br>FE80::12 link-local<br>FE80::12 link-local                                |
 | **R13**    | Lo1<br>e0/0<br>e0/1<br>e0/2<br>e0/3            | 100.1.0.13/32<br>172.16.1.16/31<br>172.16.1.18/31<br>172.16.1.7/31<br>172.16.1.3/31                    | 2001:DB8:1001::13/128<br>FE80::13 link-local<br>FE80::13 link-local<br>FE80::13 link-local<br>FE80::13 link-local                                |
-| **R14**    | Lo1<br>e0/0<br>e0/1<br>e0/2<br>e0/3            | 100.1.0.14/32<br>172.16.1.0/31<br>172.16.1.2/31<br>101.0.100.1/31<br>172.16.1.4/31                     | 2001:DB8:1001::14/128<br>FE80::14 link-local<br>FE80::14 link-local<br>FE80::14 link-local, **2001:DB8:301:22E0::14/112**<br>FE80::14 link-local |
+| **R14**    | Lo1<br>e0/0<br>e0/1<br>e0/2<br>e0/3            | 100.1.0.14/32<br>172.16.1.0/31<br>172.16.1.2/31<br>101.0.100.1/31<br>172.16.1.4/31                     | 2001:DB8:1001::14/128<br>FE80::14 link-local<br>FE80::14 link-local<br>FE80::14 link-local, **2001:DB8:101:22E0::14/112**<br>FE80::14 link-local |
 | **R15**    | Lo1<br>e0/0<br>e0/1<br>e0/2<br>e0/3            | 100.1.0.15/32<br>172.16.1.6/31<br>172.16.1.8/31<br>30.1.100.1/31<br>172.16.1.10/31                     | 2001:DB8:1001::15/128<br>FE80::15 link-local<br>FE80::15 link-local<br>FE80::15 link-local, **2001:DB8:301:21E0::15/112**<br>FE80::15 link-local |
 | **R19**    | Lo1<br>e0/0                                    | 100.1.0.19/32<br>172.16.1.5/31                                                                         | 2001:DB8:1001::19/128<br>FE80::19 link-local                                                                                                     |
 | **R20**    | Lo1<br>e0/0                                    | 100.1.0.20/32<br>172.16.1.11/31                                                                        | 2001:DB8:1001::20/128<br>FE80::20 link-local                                                                                                     |
@@ -115,21 +115,21 @@
 <pre>
 !
 interface Ethernet0/2
- ipv6 address 2001:DB8:301:22E0::14/112
+ ipv6 address 2001:DB8:101:22E0::14/112
 !
 router bgp 1001
- neighbor 2001:DB8:301:22E0::22 remote-as 101
+ neighbor 2001:DB8:101:22E0::22 remote-as 101
  neighbor 101.0.100.0 remote-as 101
  !
  address-family ipv4
   network 100.1.0.0 mask 255.255.0.0
-  no neighbor 2001:DB8:301:22E0::22 activate
+  no neighbor 2001:DB8:101:22E0::22 activate
   neighbor 101.0.100.0 activate
  exit-address-family
  !
  address-family ipv6
   network 2001:DB8:1001::/48
-  neighbor 2001:DB8:301:22E0::22 activate
+  neighbor 2001:DB8:101:22E0::22 activate
  exit-address-family
 !
 no ip route *
