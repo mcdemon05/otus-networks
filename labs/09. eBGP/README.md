@@ -149,7 +149,7 @@ BGP table version is 11, local router ID is 100.1.0.14
      Network          Next Hop            Metric LocPrf Weight Path
  *>  0.0.0.0          101.0.100.0                            0 101 i
  *>  5.20.0.0/16      101.0.100.0                            0 101 301 520 i
- *>  20.42.0.0/16     101.0.100.0                            0 101 301 520 ?
+ *>  20.42.0.0/16     101.0.100.0                            0 101 301 520 2042 i
  *>  30.1.0.0/16      101.0.100.0                            0 101 301 i
  *>  100.1.0.0/16     0.0.0.0                  0         32768 i
  *>  100.1.1.0/24     101.0.100.0                            0 101 301 520 ?
@@ -157,6 +157,7 @@ BGP table version is 11, local router ID is 100.1.0.14
  *>  100.1.10.16/28   101.0.100.0                            0 101 301 520 ?
  *>  100.1.20.16/28   101.0.100.0                            0 101 301 520 ?
  *>  101.0.0.0/16     101.0.100.0              0             0 101 i
+
 R14#sh bgp ipv6 unicast
 BGP table version is 9, local router ID is 100.1.0.14
 ...
@@ -441,25 +442,28 @@ ipv6 route 2001:DB8:301::/48 Null0
   <summary>R21 show bgp ipv4/6 unicast</summary>
 <pre>
 R21#sh bgp ipv4 unicast
-BGP table version is 349, local router ID is 30.1.0.21
+BGP table version is 11, local router ID is 30.1.0.21
 ...
      Network          Next Hop            Metric LocPrf Weight Path
-     0.0.0.0          0.0.0.0                                0 i
+ *>  0.0.0.0          172.16.1.1               0             0 101 i
+                      0.0.0.0                                0 i
  *>  5.20.0.0/16      5.20.24.0                0             0 520 i
  *>  20.42.0.0/16     5.20.24.0                              0 520 2042 i
  *>  30.1.0.0/16      0.0.0.0                  0         32768 i
- *   100.1.0.0/16     172.16.1.1                             0 101 1001 i
- *>                   30.1.100.1               0             0 1001 i
- *>  100.1.1.0/24     5.20.24.0               20             0 520 ?
+ *>  100.1.0.0/16     30.1.100.1               0             0 1001 i
+ *                    172.16.1.1                             0 101 1001 i
+ *>  100.1.1.0/24     5.20.24.0               10             0 520 ?
  *>  100.1.2.0/24     5.20.24.0               20             0 520 ?
- *>  100.1.10.16/28   5.20.24.0               20             0 520 ?
- *>  100.1.20.16/28   5.20.24.0               20             0 520 ?
+ *>  100.1.10.16/28   5.20.24.0               10             0 520 ?
+ *>  100.1.20.16/28   5.20.24.0               10             0 520 ?
  *>  101.0.0.0/16     172.16.1.1               0             0 101 i
-R21#sh bgp ipv6 unicast
-BGP table version is 178, local router ID is 30.1.0.21
+R21# sh bgp ipv6 unicast
+BGP table version is 10, local router ID is 30.1.0.21
 ...
      Network          Next Hop            Metric LocPrf Weight Path
-     ::/0             ::                                     0 i
+ *>  ::/0             2001:DB8:301:21E1::22
+                                                0             0 101 i
+                      ::                                     0 i
  *>  2001:DB8:101::/48
                        2001:DB8:301:21E1::22
                                                 0             0 101 i
@@ -537,12 +541,13 @@ ipv6 route 2001:DB8:101::/48 Null0
   <summary>R22 show bgp ipv4/6 unicast</summary>
 <pre>
 R22#sh bgp ipv4 unicast
-BGP table version is 12, local router ID is 101.0.0.22
+BGP table version is 11, local router ID is 101.0.0.22
 ...
      Network          Next Hop            Metric LocPrf Weight Path
      0.0.0.0          0.0.0.0                                0 i
+ *>                   5.20.23.0                0         32768 i
  *>  5.20.0.0/16      172.16.1.0                             0 301 520 i
- *>  20.42.0.0/16     172.16.1.0                             0 301 520 ?
+ *>  20.42.0.0/16     172.16.1.0                             0 301 520 2042 i
  *>  30.1.0.0/16      172.16.1.0               0             0 301 i
  *   100.1.0.0/16     172.16.1.0                             0 301 1001 i
  *>                   101.0.100.1              0             0 1001 i
@@ -551,11 +556,12 @@ BGP table version is 12, local router ID is 101.0.0.22
  *>  100.1.10.16/28   172.16.1.0                             0 301 520 ?
  *>  100.1.20.16/28   172.16.1.0                             0 301 520 ?
  *>  101.0.0.0/16     0.0.0.0                  0         32768 i
-R22#sh bgp ipv6 unicast
-BGP table version is 10, local router ID is 101.0.0.22
+R22# sh bgp ipv6 unicast
+BGP table version is 9, local router ID is 101.0.0.22
 ...
      Network          Next Hop            Metric LocPrf Weight Path
      ::/0             ::                                     0 i
+ *>                   FE80::23                 0         32768 i
  *>  2001:DB8:101::/48
                        ::                       0         32768 i
  *>  2001:DB8:301::/48
