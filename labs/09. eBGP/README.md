@@ -502,6 +502,7 @@ router bgp 101
  neighbor 172.16.1.0 remote-as 301
  !
  address-family ipv4
+  network 0.0.0.0
   network 101.0.0.0 mask 255.255.0.0
   neighbor 101.0.100.1 activate
   neighbor 101.0.100.1 default-originate
@@ -509,6 +510,7 @@ router bgp 101
  exit-address-family
  !
  address-family ipv6
+  network ::/0
   network 2001:DB8:101::/48
   neighbor 2001:DB8:301:21E1::21 activate
   neighbor 2001:DB8:101:22E0::14 activate
@@ -582,6 +584,15 @@ BGP table version is 10, local router ID is 101.0.0.22
 <details>
   <summary>R23</summary>
 <pre>
+!
+router isis
+ no redistribute static
+ default-information originate
+ !
+ address-family ipv6
+  no redistribute static
+  default-information originate
+ exit-address-family
 !
 no ip route *
 ip route 0.0.0.0 0.0.0.0 5.20.23.1

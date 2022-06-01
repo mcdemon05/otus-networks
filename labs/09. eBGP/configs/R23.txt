@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 19:18:27 VLAD Tue May 24 2022
+! Last configuration change at 13:47:44 VLAD Wed Jun 1 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -114,10 +114,10 @@ interface Ethernet1/3
 !
 router isis
  net 49.2222.0520.0000.0023.00
- redistribute static ip
+ default-information originate
  !
  address-family ipv6
-  redistribute static
+  default-information originate
  exit-address-family
 !
 ip forward-protocol nd
