@@ -1,0 +1,156 @@
+
+!
+! Last configuration change at 18:25:01 VLAD Mon Apr 25 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R16
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$ULGl$ItY2LnqrWjkB7ARGqwvb2/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 20.42.0.16 255.255.255.255
+ ipv6 address 2001:DB8:2042::16/128
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 172.16.1.4 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 172.16.1.1 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 172.16.1.6 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 172.16.1.8 255.255.255.254
+ ipv6 address FE80::16 link-local
+!
+!
+router eigrp SPB
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  af-interface Ethernet0/1
+   summary-address 20.42.0.0 255.255.0.0
+   summary-address 172.16.1.0 255.255.255.0
+  exit-af-interface
+  !
+  topology base
+   distribute-list prefix FILTER-INTO-R32 out Ethernet0/3
+  exit-af-topology
+  network 0.0.0.0
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  af-interface Ethernet0/1
+   summary-address 2001:DB8:2042::/48
+  exit-af-interface
+  !
+  topology base
+   distribute-list prefix-list FILTER-INTO-R32 out Ethernet0/3
+  exit-af-topology
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+ip prefix-list FILTER-INTO-R32 seq 10 permit 0.0.0.0/0
+!
+!
+ipv6 prefix-list FILTER-INTO-R32 seq 10 permit ::/0
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 13061E010803
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 1511021F0725
+ login
+ transport input none
+!
+!
+end

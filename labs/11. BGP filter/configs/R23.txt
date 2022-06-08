@@ -1,0 +1,183 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R23
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$m7cA$lxHaoSC6ALn2nKX/EfjOw/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 5.20.0.23 255.255.255.255
+ ip router isis 
+ ipv6 address 2001:DB8:520::23/128
+ ipv6 router isis 
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 5.20.23.0 255.255.255.254
+ ipv6 address FE80::23 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 172.16.1.0 255.255.255.254
+ ip router isis 
+ ipv6 address FE80::23 link-local
+ ipv6 router isis 
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 172.16.1.2 255.255.255.254
+ ip router isis 
+ ipv6 address FE80::23 link-local
+ ipv6 router isis 
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router isis
+ net 49.2222.0520.0000.0023.00
+!
+router bgp 520
+ bgp log-neighbor-changes
+ neighbor triada peer-group
+ neighbor triada remote-as 520
+ neighbor triada update-source Loopback1
+ neighbor triada_v6 peer-group
+ neighbor triada_v6 remote-as 520
+ neighbor triada_v6 update-source Loopback1
+ neighbor 5.20.0.24 peer-group triada
+ neighbor 5.20.0.25 peer-group triada
+ neighbor 5.20.0.26 peer-group triada
+ neighbor 2001:DB8:520::24 peer-group triada_v6
+ neighbor 2001:DB8:520::25 peer-group triada_v6
+ neighbor 2001:DB8:520::26 peer-group triada_v6
+ !
+ address-family ipv4
+  network 0.0.0.0
+  neighbor triada next-hop-self
+  neighbor 5.20.0.24 activate
+  neighbor 5.20.0.25 activate
+  neighbor 5.20.0.26 activate
+  no neighbor 2001:DB8:520::24 activate
+  no neighbor 2001:DB8:520::25 activate
+  no neighbor 2001:DB8:520::26 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network ::/0
+  neighbor triada_v6 next-hop-self
+  neighbor 2001:DB8:520::24 activate
+  neighbor 2001:DB8:520::25 activate
+  neighbor 2001:DB8:520::26 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 5.20.23.1
+!
+ipv6 route ::/0 Ethernet0/0 FE80::22
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 01100F175804
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 01100F175804
+ login
+ transport input none
+!
+!
+end
