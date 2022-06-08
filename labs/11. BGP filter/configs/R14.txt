@@ -141,7 +141,7 @@ router bgp 1001
   neighbor 100.1.0.15 weight 33333
   neighbor 101.0.100.0 activate
   neighbor 101.0.100.0 prefix-list MSK out
-  neighbor 101.0.100.0 route-map only1001 out
+  neighbor 101.0.100.0 filter-list 1 out
  exit-address-family
  !
  address-family ipv6
@@ -150,7 +150,7 @@ router bgp 1001
   neighbor msk_v6 next-hop-self
   neighbor 2001:DB8:101:22E0::22 activate
   neighbor 2001:DB8:101:22E0::22 prefix-list MSK_v6 out
-  neighbor 2001:DB8:101:22E0::22 route-map only1001 out
+  neighbor 2001:DB8:101:22E0::22 filter-list 1 out
   neighbor 2001:DB8:1001::12 activate
   neighbor 2001:DB8:1001::13 activate
   neighbor 2001:DB8:1001::15 activate
@@ -160,6 +160,7 @@ router bgp 1001
 ip forward-protocol nd
 !
 ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
@@ -183,10 +184,6 @@ ipv6 router ospf 1
 !
 ipv6 prefix-list MSK_v6 seq 20 deny 2001:DB8:1001::/48 ge 49
 ipv6 prefix-list MSK_v6 seq 30 permit ::/0 le 128
-route-map only1001 permit 10
- match as-path 1
-!
-route-map only1001 deny 20
 !
 !
 !

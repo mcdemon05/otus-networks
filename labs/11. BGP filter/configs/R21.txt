@@ -121,7 +121,7 @@ router bgp 301
   neighbor 5.20.24.0 activate
   neighbor 30.1.100.1 activate
   neighbor 30.1.100.1 default-originate
-  neighbor 30.1.100.1 route-map SPB out
+  neighbor 30.1.100.1 filter-list 1 out
   no neighbor 2001:DB8:301:21E0::15 activate
   no neighbor 2001:DB8:301:21E1::22 activate
   no neighbor 2001:DB8:520:24E0::24 activate
@@ -132,7 +132,7 @@ router bgp 301
   network 2001:DB8:301::/48
   neighbor 2001:DB8:301:21E0::15 activate
   neighbor 2001:DB8:301:21E0::15 default-originate
-  neighbor 2001:DB8:301:21E0::15 route-map SPB out
+  neighbor 2001:DB8:301:21E0::15 filter-list 1 out
   neighbor 2001:DB8:301:21E1::22 activate
   neighbor 2001:DB8:520:24E0::24 activate
  exit-address-family
@@ -140,6 +140,7 @@ router bgp 301
 ip forward-protocol nd
 !
 ip as-path access-list 1 permit _2042$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
@@ -147,10 +148,6 @@ ip route 30.1.0.0 255.255.0.0 Null0
 !
 ipv6 route 2001:DB8:301::/48 Null0
 !
-route-map SPB permit 10
- match as-path 1
-!
-route-map SPB deny 20
 !
 !
 !
