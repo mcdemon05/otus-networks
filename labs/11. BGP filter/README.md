@@ -119,12 +119,14 @@ router bgp 1001
  address-family ipv4
   redistribute static
   neighbor 100.1.0.15 weight 33333
+  neighbor 101.0.100.0 prefix-list WAN in
   neighbor 101.0.100.0 prefix-list MSK out
   neighbor 101.0.100.0 filter-list 1 out
  exit-address-family
  !
  address-family ipv6
   redistribute static
+  neighbor 2001:DB8:101:22E0::22 prefix-list WAN_v6 in
   neighbor 2001:DB8:101:22E0::22 prefix-list MSK_v6 out
   neighbor 2001:DB8:101:22E0::22 filter-list 1 out
   neighbor 2001:DB8:1001::15 weight 33333
@@ -133,8 +135,14 @@ router bgp 1001
 ip prefix-list MSK seq 20 deny 100.1.0.0/16 ge 17
 ip prefix-list MSK seq 30 permit 0.0.0.0/0 le 32
 !
+ip prefix-list WAN seq 15 permit 0.0.0.0/0
+ip prefix-list WAN seq 20 deny 0.0.0.0/0 ge 1
+!
 ipv6 prefix-list MSK_v6 seq 20 deny 2001:DB8:1001::/48 ge 49
 ipv6 prefix-list MSK_v6 seq 30 permit ::/0 le 128
+!
+ipv6 prefix-list WAN_v6 seq 15 permit ::/0
+ipv6 prefix-list WAN_v6 seq 20 deny ::/0 ge 1
 !
 ip as-path access-list 1 permit ^$
 ip as-path access-list 1 deny .*
@@ -197,12 +205,14 @@ router bgp 1001
  !
  address-family ipv4
   redistribute static
+  neighbor 30.1.100.0 prefix-list WAN in
   neighbor 30.1.100.0 prefix-list MSK out
   neighbor 30.1.100.0 filter-list 1 out
  exit-address-family
  !
  address-family ipv6
   redistribute static
+  neighbor 2001:DB8:301:21E0::21 prefix-list WAN_v6 in
   neighbor 2001:DB8:301:21E0::21 prefix-list MSK_v6 out
   neighbor 2001:DB8:301:21E0::21 filter-list 1 out
  exit-address-family
@@ -210,8 +220,16 @@ router bgp 1001
 ip prefix-list MSK seq 20 deny 100.1.0.0/16 ge 17
 ip prefix-list MSK seq 30 permit 0.0.0.0/0 le 32
 !
+ip prefix-list WAN seq 10 permit 20.42.0.0/16
+ip prefix-list WAN seq 15 permit 0.0.0.0/0
+ip prefix-list WAN seq 20 deny 0.0.0.0/0 ge 1
+!
 ipv6 prefix-list MSK_v6 seq 20 deny 2001:DB8:1001::/48 ge 49
 ipv6 prefix-list MSK_v6 seq 30 permit ::/0 le 128
+!
+ipv6 prefix-list WAN_v6 seq 10 permit 2001:DB8:2042::/48
+ipv6 prefix-list WAN_v6 seq 15 permit ::/0
+ipv6 prefix-list WAN_v6 seq 20 deny ::/0 ge 1
 !
 ip as-path access-list 1 permit ^$
 ip as-path access-list 1 deny .*

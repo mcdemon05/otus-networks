@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 20:40:00 VLAD Tue Jun 7 2022
+! Last configuration change at 18:37:49 VLAD Sat Jun 11 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -140,6 +140,7 @@ router bgp 1001
   neighbor 100.1.0.15 activate
   neighbor 100.1.0.15 weight 33333
   neighbor 101.0.100.0 activate
+  neighbor 101.0.100.0 prefix-list WAN in
   neighbor 101.0.100.0 prefix-list MSK out
   neighbor 101.0.100.0 filter-list 1 out
  exit-address-family
@@ -149,6 +150,7 @@ router bgp 1001
   network 2001:DB8:1001::/48
   neighbor msk_v6 next-hop-self
   neighbor 2001:DB8:101:22E0::22 activate
+  neighbor 2001:DB8:101:22E0::22 prefix-list WAN_v6 in
   neighbor 2001:DB8:101:22E0::22 prefix-list MSK_v6 out
   neighbor 2001:DB8:101:22E0::22 filter-list 1 out
   neighbor 2001:DB8:1001::12 activate
@@ -173,6 +175,9 @@ ip route 100.1.20.16 255.255.255.240 101.0.100.0 201
 !
 ip prefix-list MSK seq 20 deny 100.1.0.0/16 ge 17
 ip prefix-list MSK seq 30 permit 0.0.0.0/0 le 32
+!
+ip prefix-list WAN seq 15 permit 0.0.0.0/0
+ip prefix-list WAN seq 20 deny 0.0.0.0/0 ge 1
 ipv6 route 2001:DB8:1001:A00::/56 Ethernet0/2 FE80::22 201
 ipv6 route 2001:DB8:1001:B00::/56 Ethernet0/2 FE80::22 201
 ipv6 route 2001:DB8:1001::/48 Null0
@@ -185,6 +190,8 @@ ipv6 router ospf 1
 ipv6 prefix-list MSK_v6 seq 20 deny 2001:DB8:1001::/48 ge 49
 ipv6 prefix-list MSK_v6 seq 30 permit ::/0 le 128
 !
+ipv6 prefix-list WAN_v6 seq 15 permit ::/0
+ipv6 prefix-list WAN_v6 seq 20 deny ::/0 ge 1
 !
 !
 control-plane

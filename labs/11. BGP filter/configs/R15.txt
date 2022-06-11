@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 18:20:25 VLAD Sat Jun 11 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -130,6 +132,7 @@ router bgp 1001
   redistribute static
   neighbor msk next-hop-self
   neighbor 30.1.100.0 activate
+  neighbor 30.1.100.0 prefix-list WAN in
   neighbor 30.1.100.0 prefix-list MSK out
   neighbor 30.1.100.0 route-map AS301-IN in
   neighbor 30.1.100.0 filter-list 1 out
@@ -147,6 +150,7 @@ router bgp 1001
   network 2001:DB8:1001::/48
   neighbor msk_v6 next-hop-self
   neighbor 2001:DB8:301:21E0::21 activate
+  neighbor 2001:DB8:301:21E0::21 prefix-list WAN_v6 in
   neighbor 2001:DB8:301:21E0::21 prefix-list MSK_v6 out
   neighbor 2001:DB8:301:21E0::21 route-map AS301-IN in
   neighbor 2001:DB8:301:21E0::21 filter-list 1 out
@@ -175,6 +179,10 @@ ip prefix-list FILTER-INTO-AREA-102 seq 30 permit 0.0.0.0/0 le 32
 !
 ip prefix-list MSK seq 20 deny 100.1.0.0/16 ge 17
 ip prefix-list MSK seq 30 permit 0.0.0.0/0 le 32
+!
+ip prefix-list WAN seq 10 permit 20.42.0.0/16
+ip prefix-list WAN seq 15 permit 0.0.0.0/0
+ip prefix-list WAN seq 20 deny 0.0.0.0/0 ge 1
 ipv6 route 2001:DB8:1001:A00::/56 Ethernet0/2 FE80::21
 ipv6 route 2001:DB8:1001:B00::/56 Ethernet0/2 FE80::21
 ipv6 route 2001:DB8:1001::/48 Null0
@@ -189,9 +197,12 @@ ipv6 prefix-list FILTER-INTO-AREA-102 seq 20 permit ::/0 le 128
 !
 ipv6 prefix-list MSK_v6 seq 20 deny 2001:DB8:1001::/48 ge 49
 ipv6 prefix-list MSK_v6 seq 30 permit ::/0 le 128
+!
+ipv6 prefix-list WAN_v6 seq 10 permit 2001:DB8:2042::/48
+ipv6 prefix-list WAN_v6 seq 15 permit ::/0
+ipv6 prefix-list WAN_v6 seq 20 deny ::/0 ge 1
 route-map AS301-IN permit 10
  set local-preference 150
-!
 !
 !
 !
