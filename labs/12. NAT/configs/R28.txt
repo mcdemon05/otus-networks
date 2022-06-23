@@ -1,0 +1,173 @@
+
+!
+! Last configuration change at 16:44:46 VLAD Thu Jun 23 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R28
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$nDA4$6SZATrMgFjsjaFPGJQIQ30
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+track 1 ip sla 1 reachability
+!
+track 2 ip sla 2 reachability
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 100.1.1.28 255.255.255.255
+ ipv6 address 2001:DB8:1001:AA1::28/128
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 5.20.26.1 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 5.20.25.3 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 172.16.1.0 255.255.255.254
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source static 192.168.10.2 100.1.1.102
+ip nat inside source static 192.168.20.2 100.1.1.202
+ip route 0.0.0.0 0.0.0.0 5.20.26.0 track 1
+ip route 0.0.0.0 0.0.0.0 5.20.25.2 2 track 2
+ip route 100.1.1.29 255.255.255.255 172.16.1.1
+ip route 192.168.0.0 255.255.0.0 172.16.1.1
+!
+ip sla 1
+ icmp-echo 5.20.26.0 source-ip 5.20.26.1
+ threshold 2
+ timeout 2
+ frequency 4
+ip sla schedule 1 start-time now
+ip sla 2
+ icmp-echo 5.20.25.2 source-ip 5.20.25.3
+ threshold 2
+ timeout 2
+ frequency 4
+ip sla schedule 2 start-time now
+ipv6 route 2001:DB8:1001:A10::/64 Ethernet0/2 FE80::29
+ipv6 route 2001:DB8:1001:A20::/64 Ethernet0/2 FE80::29
+ipv6 route 2001:DB8:1001:AA1::29/128 Ethernet0/2 FE80::29
+ipv6 route ::/0 Ethernet0/1 FE80::25 2
+ipv6 route ::/0 Ethernet0/0 FE80::26
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 01100F175804
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 060506324F41
+ login
+ transport input none
+!
+!
+end
