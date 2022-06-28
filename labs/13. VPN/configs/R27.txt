@@ -1,0 +1,154 @@
+
+!
+! Last configuration change at 19:56:35 VLAD Tue Jun 28 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R27
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$vIPN$1ZmSlAjaVPiX5y/znpuJD/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 100.1.2.27 255.255.255.255
+ ipv6 address 2001:DB8:1001:BB2::27/128
+!
+interface Tunnel0
+ no shutdown
+ ip address 10.64.0.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map multicast 100.1.0.15
+ ip nhrp map 10.64.0.1 100.1.0.15
+ ip nhrp network-id 1001
+ ip nhrp nhs 10.64.0.1
+ ip tcp adjust-mss 1360
+ tunnel source Loopback1
+ tunnel mode gre multipoint
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 5.20.25.1 255.255.255.254
+ ipv6 address FE80::27 link-local
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 5.20.25.0
+!
+ipv6 route ::/0 Ethernet0/0 FE80::25
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 070C285F4D06
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 060506324F41
+ login
+ transport input none
+!
+!
+end
