@@ -1,8 +1,5 @@
 
 !
-! Last configuration change at 19:49:17 VLAD Tue Jun 28 2022
-! NVRAM config last updated at 20:24:56 VLAD Tue Jun 28 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -147,6 +144,8 @@ router bgp 1001
  neighbor msk_v6 peer-group
  neighbor msk_v6 remote-as 1001
  neighbor msk_v6 update-source Loopback1
+ neighbor 10.64.0.2 remote-as 1001
+ neighbor 10.100.0.1 remote-as 2042
  neighbor 30.1.100.0 remote-as 301
  neighbor 2001:DB8:301:21E0::21 remote-as 301
  neighbor 2001:DB8:1001::12 peer-group msk_v6
@@ -158,11 +157,18 @@ router bgp 1001
  !
  address-family ipv4
   network 100.1.0.0 mask 255.255.0.0
+  network 192.168.10.0
+  network 192.168.20.0
   redistribute static
   neighbor msk next-hop-self
+  neighbor 10.64.0.2 activate
+  neighbor 10.64.0.2 next-hop-self
+  neighbor 10.64.0.2 prefix-list local_only out
+  neighbor 10.100.0.1 activate
+  neighbor 10.100.0.1 prefix-list local_only out
   neighbor 30.1.100.0 activate
   neighbor 30.1.100.0 prefix-list WAN in
-  neighbor 30.1.100.0 prefix-list MSK out
+  neighbor 30.1.100.0 prefix-list self_summary_only out
   neighbor 30.1.100.0 route-map AS301-IN in
   neighbor 30.1.100.0 filter-list 1 out
   no neighbor 2001:DB8:301:21E0::21 activate
@@ -218,6 +224,14 @@ ip prefix-list MSK seq 30 permit 0.0.0.0/0 le 32
 ip prefix-list WAN seq 10 permit 20.42.0.0/16
 ip prefix-list WAN seq 15 permit 0.0.0.0/0
 ip prefix-list WAN seq 20 deny 0.0.0.0/0 ge 1
+!
+ip prefix-list local_only seq 10 permit 192.168.10.0/24
+ip prefix-list local_only seq 11 permit 192.168.20.0/24
+ip prefix-list local_only seq 15 deny 0.0.0.0/0
+ip prefix-list local_only seq 20 deny 0.0.0.0/0 ge 1
+!
+ip prefix-list self_summary_only seq 10 permit 100.1.0.0/16
+ip prefix-list self_summary_only seq 20 deny 0.0.0.0/0 ge 1
 ipv6 route 2001:DB8:1001:A00::/56 Ethernet0/2 FE80::21
 ipv6 route 2001:DB8:1001:B00::/56 Ethernet0/2 FE80::21
 ipv6 route 2001:DB8:1001::/48 Null0

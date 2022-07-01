@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 19:56:31 VLAD Tue Jun 28 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -89,6 +87,20 @@ interface Tunnel0
  tunnel source Loopback1
  tunnel mode gre multipoint
 !
+interface Tunnel1
+ no shutdown
+ ip address 10.65.0.2 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map multicast 100.1.0.14
+ ip nhrp map 10.65.0.1 100.1.0.14
+ ip nhrp network-id 1001
+ ip nhrp nhs 10.65.0.1
+ ip tcp adjust-mss 1360
+ tunnel source Loopback1
+ tunnel mode gre multipoint
+!
 interface Ethernet0/0
  no shutdown
  ip address 5.20.26.1 255.255.255.254
@@ -130,18 +142,40 @@ interface Ethernet1/3
  no ip address
  shutdown
 !
+router bgp 1001
+ bgp log-neighbor-changes
+ neighbor 10.64.0.1 remote-as 1001
+ neighbor 10.65.0.1 remote-as 1001
+ !
+ address-family ipv4
+  network 192.168.210.0
+  network 192.168.220.0
+  neighbor 10.64.0.1 activate
+  neighbor 10.64.0.1 next-hop-self
+  neighbor 10.64.0.1 prefix-list local_only out
+  neighbor 10.65.0.1 activate
+  neighbor 10.65.0.1 next-hop-self
+  neighbor 10.65.0.1 prefix-list local_only out
+ exit-address-family
+!
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
-ip nat inside source static 192.168.10.2 100.1.1.102
-ip nat inside source static 192.168.20.2 100.1.1.202
+ip nat inside source static 192.168.210.2 100.1.1.102
+ip nat inside source static 192.168.220.2 100.1.1.202
 ip route 0.0.0.0 0.0.0.0 5.20.26.0 track 1
 ip route 0.0.0.0 0.0.0.0 5.20.25.2 2 track 2
 ip route 100.1.1.29 255.255.255.255 172.16.1.1
-ip route 192.168.0.0 255.255.0.0 172.16.1.1
+ip route 192.168.210.0 255.255.255.0 172.16.1.1
+ip route 192.168.220.0 255.255.255.0 172.16.1.1
 !
+!
+ip prefix-list local_only seq 10 permit 192.168.210.0/24
+ip prefix-list local_only seq 11 permit 192.168.220.0/24
+ip prefix-list local_only seq 15 deny 0.0.0.0/0
+ip prefix-list local_only seq 20 deny 0.0.0.0/0 ge 1
 ip sla 1
  icmp-echo 5.20.26.0 source-ip 5.20.26.1
  threshold 2

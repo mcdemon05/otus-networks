@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 16:47:05 VLAD Tue Jun 28 2022
+! Last configuration change at 14:51:53 VLAD Fri Jul 1 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -79,6 +79,14 @@ interface Tunnel100
  tunnel source Loopback1
  tunnel destination 100.1.0.15
 !
+interface Tunnel101
+ no shutdown
+ ip address 10.100.0.3 255.255.255.254
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source Loopback1
+ tunnel destination 100.1.0.14
+!
 interface Ethernet0/0
  no shutdown
  ip address 172.16.1.0 255.255.255.254
@@ -132,15 +140,23 @@ router bgp 2042
  bgp log-neighbor-changes
  neighbor 5.20.24.2 remote-as 520
  neighbor 5.20.26.2 remote-as 520
+ neighbor 10.100.0.0 remote-as 1001
+ neighbor 10.100.0.2 remote-as 1001
  neighbor 2001:DB8:520:24E3::24 remote-as 520
  neighbor 2001:DB8:520:26E3::26 remote-as 520
  !
  address-family ipv4
   network 20.42.0.0 mask 255.255.0.0
+  network 192.168.110.0
+  network 192.168.120.0
   neighbor 5.20.24.2 activate
   neighbor 5.20.24.2 prefix-list SPB out
   neighbor 5.20.26.2 activate
   neighbor 5.20.26.2 prefix-list SPB out
+  neighbor 10.100.0.0 activate
+  neighbor 10.100.0.0 prefix-list local_only out
+  neighbor 10.100.0.2 activate
+  neighbor 10.100.0.2 prefix-list local_only out
   no neighbor 2001:DB8:520:24E3::24 activate
   no neighbor 2001:DB8:520:26E3::26 activate
   maximum-paths 2
@@ -164,8 +180,8 @@ ip nat pool NAT-POOL 20.42.200.1 20.42.200.6 prefix-length 29
 ip nat inside source list NAT pool NAT-POOL overload
 !
 ip access-list standard NAT
- permit 192.168.10.0 0.0.0.255
- permit 192.168.20.0 0.0.0.255
+ permit 192.168.110.0 0.0.0.255
+ permit 192.168.120.0 0.0.0.255
 !
 !
 ip prefix-list SPB seq 10 permit 20.42.0.0/16
@@ -173,6 +189,11 @@ ip prefix-list SPB seq 20 deny 0.0.0.0/0 le 32
 !
 ip prefix-list default_r seq 10 permit 0.0.0.0/0
 ip prefix-list default_r seq 20 deny 0.0.0.0/0 le 32
+!
+ip prefix-list local_only seq 10 permit 192.168.110.0/24
+ip prefix-list local_only seq 11 permit 192.168.120.0/24
+ip prefix-list local_only seq 15 deny 0.0.0.0/0
+ip prefix-list local_only seq 20 deny 0.0.0.0/0 ge 1
 !
 !
 ipv6 prefix-list SPB_v6 seq 10 permit 2001:DB8:2042::/48

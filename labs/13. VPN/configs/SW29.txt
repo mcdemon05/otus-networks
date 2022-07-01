@@ -76,14 +76,14 @@ interface Ethernet0/3
 !
 interface Vlan10
  no shutdown
- ip address 192.168.10.1 255.255.255.0
+ ip address 192.168.210.1 255.255.255.0
  ipv6 address 2001:DB8:1001:A10::1/64
  ipv6 nd cache expire 30
  arp timeout 30
 !
 interface Vlan20
  no shutdown
- ip address 192.168.20.1 255.255.255.0
+ ip address 192.168.220.1 255.255.255.0
  ipv6 address 2001:DB8:1001:A20::1/64
  ipv6 nd cache expire 30
  arp timeout 30
