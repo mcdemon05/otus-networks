@@ -1,0 +1,238 @@
+
+!
+! Last configuration change at 14:51:53 VLAD Fri Jul 1 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R18
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$eMfl$mbf4yIV1OeJ8UAowjw0MH.
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 20.42.0.18 255.255.255.255
+ ipv6 address 2001:DB8:2042::18/128
+!
+interface Tunnel100
+ no shutdown
+ ip address 10.100.0.1 255.255.255.254
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source Loopback1
+ tunnel destination 100.1.0.15
+!
+interface Tunnel101
+ no shutdown
+ ip address 10.100.0.3 255.255.255.254
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source Loopback1
+ tunnel destination 100.1.0.14
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 172.16.1.0 255.255.255.254
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 172.16.1.2 255.255.255.254
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 5.20.24.3 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:DB8:520:24E3::18/112
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 5.20.26.3 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:DB8:520:26E3::18/112
+!
+!
+router eigrp SPB
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  topology base
+   redistribute bgp 2042 metric 100 1 255 1 1500 route-map REDIST_def
+  exit-af-topology
+  network 20.42.0.18 0.0.0.0
+  network 172.16.1.0 0.0.0.3
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  topology base
+   redistribute bgp 2042 metric 100 1 255 1 1500 route-map REDIST_def_v6
+  exit-af-topology
+ exit-address-family
+!
+router bgp 2042
+ bgp log-neighbor-changes
+ neighbor 5.20.24.2 remote-as 520
+ neighbor 5.20.26.2 remote-as 520
+ neighbor 10.100.0.0 remote-as 1001
+ neighbor 10.100.0.2 remote-as 1001
+ neighbor 2001:DB8:520:24E3::24 remote-as 520
+ neighbor 2001:DB8:520:26E3::26 remote-as 520
+ !
+ address-family ipv4
+  network 20.42.0.0 mask 255.255.0.0
+  network 192.168.110.0
+  network 192.168.120.0
+  neighbor 5.20.24.2 activate
+  neighbor 5.20.24.2 prefix-list SPB out
+  neighbor 5.20.26.2 activate
+  neighbor 5.20.26.2 prefix-list SPB out
+  neighbor 10.100.0.0 activate
+  neighbor 10.100.0.0 prefix-list local_only out
+  neighbor 10.100.0.2 activate
+  neighbor 10.100.0.2 prefix-list local_only out
+  no neighbor 2001:DB8:520:24E3::24 activate
+  no neighbor 2001:DB8:520:26E3::26 activate
+  maximum-paths 2
+ exit-address-family
+ !
+ address-family ipv6
+  maximum-paths 2
+  network 2001:DB8:2042::/48
+  neighbor 2001:DB8:520:24E3::24 activate
+  neighbor 2001:DB8:520:24E3::24 prefix-list SPB_v6 out
+  neighbor 2001:DB8:520:26E3::26 activate
+  neighbor 2001:DB8:520:26E3::26 prefix-list SPB_v6 out
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat pool NAT-POOL 20.42.200.1 20.42.200.6 prefix-length 29
+ip nat inside source list NAT pool NAT-POOL overload
+!
+ip access-list standard NAT
+ permit 192.168.110.0 0.0.0.255
+ permit 192.168.120.0 0.0.0.255
+!
+!
+ip prefix-list SPB seq 10 permit 20.42.0.0/16
+ip prefix-list SPB seq 20 deny 0.0.0.0/0 le 32
+!
+ip prefix-list default_r seq 10 permit 0.0.0.0/0
+ip prefix-list default_r seq 20 deny 0.0.0.0/0 le 32
+!
+ip prefix-list local_only seq 10 permit 192.168.110.0/24
+ip prefix-list local_only seq 11 permit 192.168.120.0/24
+ip prefix-list local_only seq 15 deny 0.0.0.0/0
+ip prefix-list local_only seq 20 deny 0.0.0.0/0 ge 1
+!
+!
+ipv6 prefix-list SPB_v6 seq 10 permit 2001:DB8:2042::/48
+ipv6 prefix-list SPB_v6 seq 20 deny ::/0 le 128
+!
+ipv6 prefix-list default_r_v6 seq 10 permit ::/0
+ipv6 prefix-list default_r_v6 seq 20 deny ::/0 le 128
+route-map REDIST_def permit 10
+ match ip address prefix-list default_r
+!
+route-map REDIST_def deny 20
+!
+route-map REDIST_def_v6 permit 10
+ match ipv6 address prefix-list default_r_v6
+!
+route-map REDIST_def_v6 deny 20
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 00071A150754
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 13061E010803
+ login
+ transport input none
+!
+!
+end

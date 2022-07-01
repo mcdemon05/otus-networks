@@ -1,0 +1,176 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R21
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$xK9N$adTAkN.yfAJXusp.0ub5f.
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 30.1.0.21 255.255.255.255
+ ipv6 address 2001:DB8:301::21/128
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 30.1.100.0 255.255.255.254
+ ipv6 address FE80::21 link-local
+ ipv6 address 2001:DB8:301:21E0::21/112
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 172.16.1.0 255.255.255.254
+ ipv6 address FE80::21 link-local
+ ipv6 address 2001:DB8:301:21E1::21/112
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 5.20.24.1 255.255.255.254
+ ipv6 address FE80::21 link-local
+ ipv6 address 2001:DB8:520:24E0::21/112
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router bgp 301
+ bgp log-neighbor-changes
+ neighbor 5.20.24.0 remote-as 520
+ neighbor 30.1.100.1 remote-as 1001
+ neighbor 2001:DB8:301:21E0::15 remote-as 1001
+ neighbor 2001:DB8:301:21E1::22 remote-as 101
+ neighbor 2001:DB8:520:24E0::24 remote-as 520
+ neighbor 172.16.1.1 remote-as 101
+ !
+ address-family ipv4
+  network 30.1.0.0 mask 255.255.0.0
+  neighbor 5.20.24.0 activate
+  neighbor 30.1.100.1 activate
+  neighbor 30.1.100.1 default-originate
+  neighbor 30.1.100.1 filter-list 1 out
+  no neighbor 2001:DB8:301:21E0::15 activate
+  no neighbor 2001:DB8:301:21E1::22 activate
+  no neighbor 2001:DB8:520:24E0::24 activate
+  neighbor 172.16.1.1 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:DB8:301::/48
+  neighbor 2001:DB8:301:21E0::15 activate
+  neighbor 2001:DB8:301:21E0::15 default-originate
+  neighbor 2001:DB8:301:21E0::15 filter-list 1 out
+  neighbor 2001:DB8:301:21E1::22 activate
+  neighbor 2001:DB8:520:24E0::24 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+ip as-path access-list 1 permit _2042$
+ip as-path access-list 1 deny .*
+!
+no ip http server
+no ip http secure-server
+ip route 30.1.0.0 255.255.0.0 Null0
+!
+ipv6 route 2001:DB8:301::/48 Null0
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 00071A150754
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 110A1016141D
+ login
+ transport input none
+!
+!
+end
