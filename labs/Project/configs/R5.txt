@@ -1,0 +1,140 @@
+
+!
+! No configuration change since last restart
+! NVRAM config last updated at 15:13:27 VLAD Mon Jul 25 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R5
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$XqEC$YUEdEl9Mb3ofmjqs.POek.
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip dhcp excluded-address 192.168.0.1
+ip dhcp excluded-address 192.168.1.1
+!
+ip dhcp pool R3-Office
+ network 192.168.0.0 255.255.255.0
+ default-router 192.168.0.1 
+ domain-name kontora.lan
+!
+ip dhcp pool R4-Office
+ network 192.168.1.0 255.255.255.0
+ default-router 192.168.1.1 
+ domain-name kontora.lan
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 100.200.0.5 255.255.255.255
+ ip ospf 1 area 5
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 10.3.5.5 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 5
+!
+router ospf 1
+ area 5 stub
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 121A0C041104
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 02050D480809
+ login
+ transport input none
+!
+ntp master 3
+ntp update-calendar
+!
+end

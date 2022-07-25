@@ -1,0 +1,156 @@
+
+!
+! Last configuration change at 15:22:38 VLAD Mon Jul 25 2022
+! NVRAM config last updated at 15:23:21 VLAD Mon Jul 25 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$DF9a$AwMFy0Bhi48ylRkZOI0mO/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 100.200.0.2 255.255.255.255
+ ip ospf 1 area 0
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.1.2.2 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.2.4.2 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 1.10.99.1 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+router ospf 1
+ default-information originate
+!
+router bgp 100200
+ bgp log-neighbor-changes
+ network 100.200.0.0 mask 255.255.254.0
+ neighbor 1.10.99.0 remote-as 110
+ neighbor 1.10.99.0 allowas-in 1
+ neighbor 1.10.99.0 prefix-list self_prefix out
+ neighbor 100.200.0.1 remote-as 100200
+ neighbor 100.200.0.1 update-source Loopback0
+ neighbor 100.200.0.1 next-hop-self
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat pool NAT-Office 100.200.0.65 100.200.0.65 prefix-length 30
+ip nat inside source list Office pool NAT-Office overload
+ip route 0.0.0.0 0.0.0.0 Null0
+ip route 100.200.0.0 255.255.254.0 Null0
+ip route 100.200.0.66 255.255.255.255 Ethernet0/0
+!
+ip access-list standard Office
+ permit 192.168.0.0 0.0.1.255
+!
+!
+ip prefix-list self_prefix seq 10 permit 100.200.0.0/23
+ip prefix-list self_prefix seq 20 deny 0.0.0.0/0
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 121A0C041104
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 060506324F41
+ login
+ transport input none
+!
+ntp server 100.200.0.5 prefer
+!
+end

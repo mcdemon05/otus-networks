@@ -1,0 +1,201 @@
+
+!
+! No configuration change since last restart
+! NVRAM config last updated at 15:13:20 VLAD Mon Jul 25 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R10
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$3.Ob$Ws7TwBX9VoCGoMVgaJvKO/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip dhcp excluded-address 192.168.3.1
+!
+ip dhcp pool R10-Office
+ network 192.168.3.0 255.255.255.0
+ default-router 192.168.3.1 
+ domain-name kontora.lan
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 100.200.3.10 255.255.255.255
+!
+interface Tunnel0
+ no shutdown
+ ip address 10.255.0.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map multicast 100.200.0.6
+ ip nhrp map 10.255.0.1 100.200.0.6
+ ip nhrp network-id 100200
+ ip nhrp nhs 10.255.0.1
+ ip tcp adjust-mss 1360
+ tunnel source Loopback0
+ tunnel mode gre multipoint
+!
+interface Ethernet0/0
+ no shutdown
+ no ip address
+!
+interface Ethernet0/0.10
+ no shutdown
+ encapsulation dot1Q 10
+ ip address 192.168.3.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/0.100
+ no shutdown
+ encapsulation dot1Q 100
+ ip address 10.10.31.10 255.255.255.0
+!
+interface Ethernet0/0.1000
+ no shutdown
+ encapsulation dot1Q 1000 native
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 2.20.97.1 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+!
+interface Ethernet0/3.10
+ no shutdown
+ encapsulation dot1Q 10
+ ip address 100.200.3.193 255.255.255.192
+!
+interface Ethernet0/3.100
+ no shutdown
+ encapsulation dot1Q 100
+ ip address 10.10.30.10 255.255.255.0
+!
+interface Ethernet0/3.1000
+ no shutdown
+ encapsulation dot1Q 1000 native
+!
+!
+router eigrp NSK
+ !
+ address-family ipv4 unicast autonomous-system 65535
+  !
+  topology base
+  exit-af-topology
+  network 10.255.0.0 0.0.0.255
+  network 192.168.3.0
+ exit-address-family
+!
+router bgp 100200
+ bgp log-neighbor-changes
+ network 100.200.3.0 mask 255.255.255.0
+ neighbor 2.20.97.0 remote-as 220
+ neighbor 2.20.97.0 allowas-in 1
+ neighbor 2.20.97.0 prefix-list self_prefix out
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat pool NAT-Office 100.200.3.65 100.200.3.65 prefix-length 30
+ip nat inside source list Office pool NAT-Office overload
+ip route 100.200.3.0 255.255.255.0 Null0
+!
+ip access-list standard Office
+ permit 192.168.3.0 0.0.0.255
+!
+!
+ip prefix-list self_prefix seq 10 permit 100.200.3.0/24
+ip prefix-list self_prefix seq 20 deny 0.0.0.0/0
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 110A1016141D
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 00071A150754
+ login
+ transport input none
+!
+ntp master 3
+ntp update-calendar
+!
+end

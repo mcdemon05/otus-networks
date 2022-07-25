@@ -1,0 +1,153 @@
+
+!
+! No configuration change since last restart
+! NVRAM config last updated at 15:13:24 VLAD Mon Jul 25 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R7
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$wPw.$TmhCyNkfWHr0QGaFtHueq.
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 100.200.2.7 255.255.255.255
+ ip ospf 1 area 0
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.7.8.7 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 1.10.98.1 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 2.20.98.1 255.255.255.254
+ ip nat outside
+ ip virtual-reassembly in
+!
+router ospf 1
+ default-information originate
+!
+router bgp 100200
+ bgp log-neighbor-changes
+ network 100.200.2.0 mask 255.255.255.0
+ neighbor 1.10.98.0 remote-as 110
+ neighbor 1.10.98.0 allowas-in 1
+ neighbor 1.10.98.0 prefix-list self_prefix out
+ neighbor 2.20.98.0 remote-as 220
+ neighbor 2.20.98.0 allowas-in 1
+ neighbor 2.20.98.0 prefix-list self_prefix out
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat pool NAT-Office 100.200.2.65 100.200.2.65 prefix-length 30
+ip nat inside source list Office pool NAT-Office overload
+ip route 0.0.0.0 0.0.0.0 Null0
+ip route 100.200.2.0 255.255.255.0 Null0
+!
+ip access-list standard Office
+ permit 192.168.2.0 0.0.0.255
+!
+!
+ip prefix-list self_prefix seq 10 permit 100.200.2.0/24
+ip prefix-list self_prefix seq 20 deny 0.0.0.0/0
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 110A1016141D
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 060506324F41
+ login
+ transport input none
+!
+ntp server 100.200.2.9 prefer
+!
+end

@@ -1,0 +1,180 @@
+
+!
+! No configuration change since last restart
+! NVRAM config last updated at 15:13:30 VLAD Mon Jul 25 2022
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$MxR/$55g1ZHmliPw.ag6uucGUd/
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 100.200.0.3 255.255.255.255
+ ip ospf 1 area 0
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.3.4.3 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.1.3.3 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 10.3.5.3 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 5
+!
+interface Ethernet1/0
+ no shutdown
+ no ip address
+!
+interface Ethernet1/0.10
+ no shutdown
+ encapsulation dot1Q 10
+ ip address 192.168.0.1 255.255.255.0
+ ip helper-address 100.200.0.5
+ ip ospf 1 area 0
+!
+interface Ethernet1/0.100
+ no shutdown
+ encapsulation dot1Q 100
+ ip address 10.3.25.3 255.255.255.0
+ ip ospf 1 area 0
+!
+interface Ethernet1/0.1000
+ no shutdown
+ encapsulation dot1Q 1000 native
+!
+interface Ethernet1/1
+ no shutdown
+ no ip address
+!
+interface Ethernet1/1.10
+ no shutdown
+ encapsulation dot1Q 10
+ ip address 100.200.1.193 255.255.255.192
+ ip ospf 1 area 0
+!
+interface Ethernet1/1.100
+ no shutdown
+ encapsulation dot1Q 100
+ ip address 10.3.27.3 255.255.255.0
+ ip ospf 1 area 0
+!
+interface Ethernet1/1.1000
+ no shutdown
+ encapsulation dot1Q 1000 native
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router ospf 1
+ area 5 stub no-summary
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 045802150C2E
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 00071A150754
+ login
+ transport input none
+!
+ntp server 100.200.0.5 prefer
+!
+end

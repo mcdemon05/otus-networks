@@ -1,0 +1,132 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R12
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$Fdm6$cE4NnaMdwD0DxhWz/.vxS.
+!
+no aaa new-model
+clock timezone VLAD 10 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 1.10.0.12 255.255.255.255
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 1.10.255.0 255.255.255.254
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 1.10.98.0 255.255.255.254
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 1.10.99.0 255.255.255.254
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 1.10.96.0 255.255.255.254
+!
+router bgp 110
+ bgp log-neighbor-changes
+ network 1.10.0.0 mask 255.255.0.0
+ neighbor 1.10.96.1 remote-as 100200
+ neighbor 1.10.96.1 prefix-list AS100200_prefix in
+ neighbor 1.10.98.1 remote-as 100200
+ neighbor 1.10.98.1 prefix-list AS100200_prefix in
+ neighbor 1.10.99.1 remote-as 100200
+ neighbor 1.10.99.1 prefix-list AS100200_prefix in
+ neighbor 1.10.255.1 remote-as 220
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 1.10.0.0 255.255.0.0 Null0
+!
+!
+ip prefix-list AS100200_prefix seq 10 permit 100.200.0.0/19 le 24
+ip prefix-list AS100200_prefix seq 20 deny 0.0.0.0/0
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd $Warning: Unauthorized access is prohibited!!$
+!
+line con 0
+ exec-timeout 0 0
+ password 7 094F471A1A0A
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 0822455D0A16
+ login
+ transport input none
+!
+!
+end
